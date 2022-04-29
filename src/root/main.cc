@@ -1,5 +1,6 @@
-#include<stdlib.h>
-#include<stdio.h>
+#include"../includes/version.hpp"
+#include"../includes/newton.hpp"
+
 int main(int argc,char**argv)
 {
     printf("\n");
