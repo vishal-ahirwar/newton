@@ -1,20 +1,25 @@
 #define RELEASE
-#include"../includes/version.hpp"
-#include"../includes/newton.hpp"
+#include "../includes/version.hpp"
+#include "../includes/newton.hpp"
 
-
-int main(int argc,char*argv[])
+int main(int argc, char *argv[])
 {
-    
-    if(c_str_compare(argv[1],"create"))
-    {
-        printf("[newton] Creating directory ....\n");
-       
-        char cmd[250]={NULL};
-        add_to_command("mkdir ",argv[2],cmd);
 
-        if(!system(cmd))
-        printf("[newton] Directory Created Successfuly :)\n");
+    if (c_str_compare(argv[1], "create"))
+    {
+        initOnCreate(argv);
+
+    }else if(c_str_compare(argv[1],"help"))
+    {
+         printf("[newton] Help Wizard ...\n");
+
+    }else if(c_str_compare(argv[1],"compile"))
+    {
+        printf("[newton] Compiling Project ...\n");
+    }else
+    {
+        printf("[newton] Invalid Commands !\n");
+        printf("shtting down :(\n");
     };
 
     return 0;
