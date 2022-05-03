@@ -7,3 +7,5 @@ add_library(
     )
 add_executable(${PROJECT_NAME} ./src/root/main.cc)
 target_link_libraries(${PROJECT_NAME} libnewton)
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
