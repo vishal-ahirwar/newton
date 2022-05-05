@@ -36,7 +36,6 @@ void initOnCreate(char*argv[])
 
         if (!system(cmd))
         {
-            printf("[newton] Directory Created Successfuly :)\n");
             char build[100] = {0};
             char temp[250] = {0};
             add_to_command("mkdir ", argv[2], temp);
@@ -53,5 +52,6 @@ void initOnCreate(char*argv[])
             add_to_command("touch ", argv[2], temp);
             add_to_command(temp, "/CMakeLists.txt", build);
             system(build);
+            printf("[newton] Directory Created Successfuly :)\n");
         };
 };
