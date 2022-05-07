@@ -58,7 +58,8 @@ void initOnCreate(char *argv[])
         printf("[newton] writting main.c and CMakeLists.txt ....\n");
 
         std::ofstream file;
-        file.open("./src/main.cc", std::ios::out);
+        const std::string projectName{argv[2]};
+        file.open("./"+projectName+"/src/main.cc", std::ios::out);
 
         if (file.is_open())
         {
@@ -80,12 +81,12 @@ int main(int argc,char*argv[])
             file << mainCode;
             file.close();
         };
-        file.open("CMakeLists.txt", std::ios::out);
+        file.open("./"+projectName+"/CMakeLists.txt", std::ios::out);
         if (file.is_open())
         {
             const std::string cmakeCode{
                 R"(
-//Auto Genrated C++ file by newton CLI
+#Auto Genrated C++ file by newton CLI
 cmake_minimum_required(VERSION 3.1)
 )"};
             file << cmakeCode << "\n";
