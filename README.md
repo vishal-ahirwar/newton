@@ -4,6 +4,7 @@
 # How to build newton & install on your system
 ### download zip or clone newton github repo
 ```
+git clone https://github.com/vishal-ahirwar/newton
 cd newton
 cmake -S . -B build
 ```
