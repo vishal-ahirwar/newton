@@ -1,6 +1,6 @@
 # C/C++ CLI Open Source Project
 <img src="![Screenshot at 2022-05-07 16-04-36](https://user-images.githubusercontent.com/73791462/167250661-cf91fcf2-c6b5-418e-a845-707aa07b0f7c.png)
-" alt="cpp logo" width="100%"/>
+" alt="cpp logo"/>
 ### CLI For C/C++ Project Development
 
 # How to build newton & install on your system
