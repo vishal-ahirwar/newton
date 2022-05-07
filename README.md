@@ -27,4 +27,6 @@ newton run
 ```
 ## And Congrates You have done how to use newton CLI
 # Thank You for All of the project contributers and Users
-### Copyright©2022 Vishal Ahirwar and Contributers. all rights reserved.
+```
+Copyright©2022 Vishal Ahirwar and Contributers. all rights reserved.
+```
