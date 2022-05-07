@@ -51,11 +51,9 @@ void initOnCreate(char *argv[])
         add_to_command("mkdir ", argv[2], temp);
         add_to_command(temp, "/res", build);
         system(build);
-        add_to_command("touch ", argv[2], temp);
-        add_to_command(temp, "/CMakeLists.txt", build);
-        system(build);
+
         printf("[newton] Directory Created Successfuly :)\n");
-        printf("[newton] writting main.c and CMakeLists.txt ....\n");
+        printf("[newton] Generating Code for main.c and CMakeLists.txt ....\n");
 
         std::ofstream file;
         const std::string projectName{argv[2]};
@@ -67,7 +65,7 @@ void initOnCreate(char *argv[])
 
 //Auto Genrated C++ file by newton CLI
 #include<iostream>
-void say_hello()
+static inline void say_hello()
 {
     std::cerr<<"Hello, World\n";
 };
@@ -97,5 +95,5 @@ cmake_minimum_required(VERSION 3.1)
     };
     end = clock();
 
-    printf("\n[newton]All Done :)\n[newton]Elapsed Time : %8.2f microseconds\n", difftime(end, start));
+    printf("[newton]Almost Done :)\n[newton]Elapsed Time : %8.2f microseconds\n[Vishal] Have a Great Day Programmer :)\n", difftime(end, start));
 };
