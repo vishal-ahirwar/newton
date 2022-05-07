@@ -114,9 +114,10 @@ void Compile()
 
 void run()
 {
-    const std::string run{"./build/" + projectName};
+    std::cerr<<projectName<<"\n";
+    const std::string run{"./build/"+projectName};
     if(system(run.c_str()))
     {
-        printf("\n[error] Maybe You should Compile First Before run!\n");
+        printf("\n[error] Maybe You should Compile First Before run or You have Permission to execute program!\n");
     };
 };

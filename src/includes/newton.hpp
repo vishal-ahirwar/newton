@@ -4,7 +4,7 @@
 #include<fstream>
 #include<string.h>
 #include<time.h>
-
+#include<iostream>
 void add_to_command(const char*,const char*,char*);
 bool c_str_compare(const char*,const char*);
 void initOnCreate(char*argv[]);
