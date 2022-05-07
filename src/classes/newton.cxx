@@ -97,3 +97,15 @@ cmake_minimum_required(VERSION 3.1)
 
     printf("[newton]Almost Done :)\n[newton]Elapsed Time : %8.2f microseconds\n[Vishal] Have a Great Day Programmer :)\n", difftime(end, start));
 };
+
+void Compile()
+{
+    printf("[newton] Compile Process has been started ....\n");
+    if(!system("cmake -S . -B build"))
+    {
+        
+    }else
+    {
+        printf("\n[error] Make Sure You are in Your Project's Directory!\n");
+    };
+};

@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     }else if(c_str_compare(argv[1],"compile"))
     {
-        printf("[newton] Compiling Project ...\n");
+        Compile();
     }else
     {
         printf("[newton] Invalid Commands !\n");
