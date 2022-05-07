@@ -1,8 +1,6 @@
 # C/C++ CLI Open Source Project
-![Screenshot at 2022-05-07 16-04-36](https://user-images.githubusercontent.com/73791462/167250760-042eb5da-8b99-4531-ad67-07411492095a.png)
-
+![Screenshot at 2022-05-07 16-12-20](https://user-images.githubusercontent.com/73791462/167251038-6438c33b-3566-4909-a46e-b6554e5e5656.png)
 ### CLI For C/C++ Project Development
-
 # How to build newton & install on your system
 ### download zip or clone newton github repo
 ```
