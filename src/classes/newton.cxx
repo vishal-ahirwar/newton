@@ -1,5 +1,5 @@
 #include "../includes/newton.hpp"
-
+std::string projectName;
 void add_to_command(const char *cmd, const char *user, char *CMD)
 {
     int j = 0;
@@ -56,8 +56,9 @@ void initOnCreate(char *argv[])
         printf("[newton] Generating Code for main.c and CMakeLists.txt ....\n");
 
         std::ofstream file;
-        const std::string projectName{argv[2]};
-        file.open("./"+projectName+"/src/main.cc", std::ios::out);
+        // const std::string stdStr{argv[2]};
+        projectName = argv[2];
+        file.open("./" + projectName + "/src/main.cc", std::ios::out);
 
         if (file.is_open())
         {
@@ -79,7 +80,7 @@ int main(int argc,char*argv[])
             file << mainCode;
             file.close();
         };
-        file.open("./"+projectName+"/CMakeLists.txt", std::ios::out);
+        file.open("./" + projectName + "/CMakeLists.txt", std::ios::out);
         if (file.is_open())
         {
             const std::string cmakeCode{
@@ -101,11 +102,21 @@ cmake_minimum_required(VERSION 3.1)
 void Compile()
 {
     printf("[newton] Compile Process has been started ....\n");
-    if(!system("cmake -S . -B build"))
+    if (!system("cmake -S . -B build"))
     {
-        
-    }else
+        system("make -C build/");
+    }
+    else
     {
         printf("\n[error] Make Sure You are in Your Project's Directory!\n");
+    };
+};
+
+void run()
+{
+    const std::string run{"./build/" + projectName};
+    if(system(run.c_str()))
+    {
+        printf("\n[error] Maybe You should Compile First Before run!\n");
     };
 };
