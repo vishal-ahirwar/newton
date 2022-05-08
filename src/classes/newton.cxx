@@ -1,4 +1,7 @@
 #include "../includes/newton.hpp"
+namespace newton
+{
+
 std::string projectName;
 void add_to_command(const char *cmd, const char *user, char *CMD)
 {
@@ -120,4 +123,5 @@ void run()
     {
         printf("\n[error] Maybe You should Compile First Before run or You have Permission to execute program!\n");
     };
+};
 };

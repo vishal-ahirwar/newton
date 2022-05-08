@@ -2,24 +2,25 @@
 #include "../includes/version.hpp"
 #include "../includes/newton.hpp"
 
+
 int main(int argc, char *argv[])
 {
 
-    if (c_str_compare(argv[1], "create"))
+    if (newton::c_str_compare(argv[1], "create"))
     {
-        initOnCreate(argv);
+        newton::initOnCreate(argv);
     }
-    else if (c_str_compare(argv[1], "help"))
+    else if (newton::c_str_compare(argv[1], "help"))
     {
         printf("[newton] Help Wizard ...\n");
     }
-    else if (c_str_compare(argv[1], "compile"))
+    else if (newton::c_str_compare(argv[1], "compile"))
     {
-        Compile();
+        newton::Compile();
     }
-    else if (c_str_compare(argv[1], "run"))
+    else if (newton::c_str_compare(argv[1], "run"))
     {
-        run();
+        newton::run();
     }
     else
     {
