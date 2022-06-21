@@ -1,3 +1,8 @@
 build/cmake_install.cmake
-build/CMakeFiles
+build/CMakeFiles/
 .vscode
+build/CMakeFiles/3.16.3/CMakeDetermineCompilerABI_C.bin
+.gitignore
+build/CMakeFiles/3.16.3/CMakeSystem.cmake
+build/CMakeFiles/CMakeOutput.log
+build/liblibnewton.a

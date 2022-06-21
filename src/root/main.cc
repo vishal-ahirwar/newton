@@ -5,7 +5,12 @@
 
 int main(int argc, char *argv[])
 {
-
+    if(argc<2)
+    {
+        printf("[Usage]: newton command project-name\n[command] create, compile, run, help!\n");
+        return 0;
+    };
+    
     if (newton::c_str_compare(argv[1], "create"))
     {
         newton::initOnCreate(argv);
