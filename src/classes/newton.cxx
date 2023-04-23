@@ -94,6 +94,7 @@ cmake_minimum_required(VERSION 3.1)
             file << cmakeCode << "\n";
             file << "project(" << argv[2] << ")\n";
             file << "add_executable(${PROJECT_NAME} ./src/main.cc)\n";
+            file<<"install(TARGETS ${PROJECT_NAME} DESTINATION bin)\n";
             file.close();
         };
     };
