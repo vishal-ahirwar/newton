@@ -2,12 +2,35 @@
 ![Screenshot at 2022-05-07 16-12-20]
 ### CLI For C/C++ Project Development
 # How to build newton & install on your system
-### download zip or clone newton github repo
+### Download zip or clone newton github repo
 ```
 git clone https://github.com/vishal-ahirwar/newton
 cd newton
-cmake -S . -B build
 ```
+
+If your linux system does not have CMAKE isntall isntalled then it is must to isntall that for next step :
+
+`Like for fedora`
+
+```
+sudo dnf install cmake 
+```
+`For debian based disctros `
+```
+sudo apt-get install cmake
+```
+`For arch based`
+```
+sudo pacman -S cmake
+```
+
+After the installation of CMAKE follow the following commands
+```
+cmake -S . -B build
+cd build 
+```
+
+
 ### to Compile & install on your system
 ```
 sudo make install
