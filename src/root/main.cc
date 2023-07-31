@@ -1,29 +1,29 @@
 #define RELEASE
 #include "../includes/version.hpp"
 #include "../includes/newton.hpp"
-
+#include <string>
 
 int main(int argc, char *argv[])
 {
-    if(argc<2)
+    if (argc < 2)
     {
         printf("[Usage]: newton command project-name\n[command] create, compile, run, help!\n");
         return 0;
     };
-    
-    if (newton::c_str_compare(argv[1], "create"))
+
+    if (std::string(argv[1]) == std::string("create"))
     {
-        newton::initOnCreate(argv);
+        newton::createNewProject(argv);
     }
-    else if (newton::c_str_compare(argv[1], "help"))
+    else if (std::string(argv[1]) == std::string("help"))
     {
         printf("[newton] Help Wizard ...\n");
     }
-    else if (newton::c_str_compare(argv[1], "compile"))
+    else if (std::string(argv[1]) == std::string("compile"))
     {
-        newton::Compile();
+        newton::compile();
     }
-    else if (newton::c_str_compare(argv[1], "run"))
+    else if (std::string(argv[1]) == std::string("run"))
     {
         newton::run();
     }

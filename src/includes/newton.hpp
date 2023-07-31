@@ -7,11 +7,10 @@
 #include <iostream>
 namespace newton
 {
-
-    void add_to_command(const char *, const char *, char *);
-    bool c_str_compare(const char *, const char *);
-    void initOnCreate(char *argv[]);
-    void Compile();
+    void createNewProject(char *argv[]);
+    void compile();
     void run();
+    void generateNewtonFile(const std::string&);
+    void readNewtonFile(std::string&);
 }
 #endif
