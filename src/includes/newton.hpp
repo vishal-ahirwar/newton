@@ -5,12 +5,23 @@
 #include <string.h>
 #include <time.h>
 #include <iostream>
-namespace newton
+class App
 {
-    void createNewProject(char *argv[]);
-    void compile();
-    void run();
-    void generateNewtonFile(const std::string&);
-    void readNewtonFile(std::string&);
-}
+private:
+    std::string projectName;
+
+public:
+      void createNewProject(const char *argv[]);
+      void compile();
+      void run();
+
+private:
+      void generateNewtonFile(const std::string &);
+      void readNewtonFile(std::string &);
+      void createDir(const char *);
+      void generateCppTemplateFile(const char *);
+      void generateCmakeFile(const char *);
+      void generateGitIgnoreFile();
+};
+
 #endif
