@@ -1,4 +1,5 @@
 #include "../includes/newton.hpp"
+#include<filesystem>
 
 void App::createNewProject(const char *argv[])
 {
@@ -12,7 +13,7 @@ void App::createNewProject(const char *argv[])
 
     generateCppTemplateFile(argv[2]);
     generateCmakeFile(argv[2]);
-    generateNewtonFile(std::string("./") + projectName);
+    generateNewtonFile(projectName);
     end = clock();
 
     printf("Elapsed Time : %8.2fms\nHappy Coding...:)\n", difftime(end, start));
@@ -81,20 +82,25 @@ void App::readNewtonFile(std::string &output)
 
 void App::createDir(const char *argv)
 {
+    namespace fs = std::filesystem;
     std::string cmdString{};
-    cmdString += "mkdir ";
     cmdString += argv;
-    if (!system(cmdString.c_str()))
+    if (!fs::create_directory(cmdString.c_str()))
     {
         cmdString += "/build";
-        system(cmdString.c_str());
+        fs::create_directory(cmdString.c_str());
         auto pos = cmdString.find("/");
         cmdString.replace(pos + 1, cmdString.length() - pos, "src");
-        system(cmdString.c_str());
+        
+        fs::create_directory(cmdString.c_str());
         pos = cmdString.find("/");
         cmdString.replace(pos + 1, cmdString.length() - pos, "res");
-        system(cmdString.c_str());
+        fs::create_directory(cmdString.c_str()) ;
     }
+    else {
+        puts("error!");
+    }
+
 };
 
 void App::generateCppTemplateFile(const char *argv)
