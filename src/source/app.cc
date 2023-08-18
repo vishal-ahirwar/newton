@@ -1,5 +1,6 @@
 #include "../includes/app.h"
 #include"../includes/version.hpp"
+extern int argCount;
 namespace CLI
 {
     int showHelp()
@@ -12,6 +13,12 @@ namespace CLI
         App app;
         if (std::string(argv[1]) == std::string("create"))
         {
+            if (argCount < 3)
+            {
+                printf("[Error]Project name can't be null!\n");
+                return 1;
+            };
+
             app.createNewProject(argv);
         }
         else if (std::string(argv[1]) == std::string("help"))
