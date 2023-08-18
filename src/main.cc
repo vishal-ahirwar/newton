@@ -1,5 +1,5 @@
 #define RELEASE
-#include "../includes/app.h"
+#include "./includes/app.h"
 
 int main(int argc, char *argv[])
 {

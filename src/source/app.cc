@@ -1,9 +1,10 @@
 #include "../includes/app.h"
+#include"../includes/version.hpp"
 namespace CLI
 {
     int showHelp()
     {
-        printf("[Usage]: newton command project-name\n[command] create, compile, run, help!\n");
+        printf("version : %.2f\nAuthor: %s\n%s\n[Usage]: \nnewton command project-name\n[command] create, compile, run, help!\n",VERSION,COMPANY,COPYRIGHT);
         return 0;
     }
     int createApp(const char *argv[])

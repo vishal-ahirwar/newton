@@ -85,7 +85,7 @@ void App::createDir(const char *argv)
     namespace fs = std::filesystem;
     std::string cmdString{};
     cmdString += argv;
-    if (!fs::create_directory(cmdString.c_str()))
+    if (fs::create_directory(cmdString.c_str()))
     {
         cmdString += "/build";
         fs::create_directory(cmdString.c_str());
