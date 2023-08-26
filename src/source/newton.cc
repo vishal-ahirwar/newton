@@ -22,6 +22,7 @@ void App::createNewProject(const char* argv[])
 void App::compile()
 {
 	printf("[newton] Compile Process has been started ....\n");
+#ifdef WIN32
 	if (!system("cmake -S . -B build -G \"MinGW Makefiles\" "))
 	{
 		system("mingw32-make -C build");
@@ -30,6 +31,17 @@ void App::compile()
 	{
 		printf("\n[error] Make Sure You are in Your Project's Directory!\n");
 	};
+#else
+	if (!system("cmake -S . -B build"))
+	{
+		system("make -C build/");
+	}
+	else
+	{
+		printf("\n[error] Make Sure You are in Your Project's Directory!\n");
+	};
+#endif
+
 };
 
 void App::run()
@@ -37,9 +49,19 @@ void App::run()
 	std::string output{};
 	readNewtonFile(output);
 	projectName = output;
-	std::cout << projectName << "\n";
+	std::cout <<"Project : " << projectName << "\n";
+	std::cout << "OS : ";
+
 	std::string run{};
+#ifdef WIN32
+	std::cout << "Microsoft Windows\n";
+	run += ".\\build\\";
+#else
+	std::cout << "Unix Based OS\n";
 	run += "./build/";
+#endif // WIN32
+
+	std::cout << "----------------------------------\n\n";
 	run += projectName;
 	if (system(run.c_str()))
 	{
