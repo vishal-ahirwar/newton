@@ -56,13 +56,16 @@ void App::run()
 #ifdef WIN32
 	std::cout << "Microsoft Windows\n";
 	run += ".\\build\\";
+	run += projectName;
+	run += ".exe";
 #else
 	std::cout << "Unix Based OS\n";
 	run += "./build/";
+	run += projectName;
 #endif // WIN32
 
 	std::cout << "----------------------------------\n\n";
-	run += projectName;
+	
 	if (system(run.c_str()))
 	{
 		std::cout << run << "\n";
