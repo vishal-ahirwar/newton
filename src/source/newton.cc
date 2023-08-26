@@ -22,9 +22,9 @@ void App::createNewProject(const char* argv[])
 void App::compile()
 {
 	printf("[newton] Compile Process has been started ....\n");
-	if (!system("cmake -S . -B build"))
+	if (!system("cmake -S . -B build -G \"MinGW Makefiles\" "))
 	{
-		system("make -C build/");
+		system("mingw32-make -C build");
 	}
 	else
 	{
@@ -142,7 +142,7 @@ void App::generateCmakeFile(const char* argv)
 			R"(
 #Auto Genrated C++ file by newton CLI
 #Copyright2023 Vishal Ahirwar. #replace with your copyright notice.
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.0)
 )" };
 		file << cmakeCode << "\n";
 		file << "project(" << argv << ")\n";
