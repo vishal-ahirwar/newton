@@ -23,7 +23,7 @@ namespace CLI
         }
         else if (std::string(argv[1]) == std::string("help"))
         {
-            printf("[newton] Help Wizard ...\n");
+            CLI::showHelp();
         }
         else if (std::string(argv[1]) == std::string("compile"))
         {
