@@ -14,7 +14,7 @@ public:
       void createNewProject(const char *argv[]);
       void compile();
       void run();
-
+      void build();
 private:
       void generateNewtonFile(const std::string &);
       void readNewtonFile(std::string &);

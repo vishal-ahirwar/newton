@@ -33,6 +33,10 @@ namespace CLI
         {
             app.run();
         }
+        else if (std::string(argv[1]) == std::string("build"))
+        {
+            app.build();
+        }
         else
         {
             printf("[newton] Invalid Commands !\n");

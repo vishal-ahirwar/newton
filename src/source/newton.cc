@@ -14,6 +14,7 @@ void App::createNewProject(const char* argv[])
 	generateCppTemplateFile(argv[2]);
 	generateCmakeFile(argv[2]);
 	generateNewtonFile(projectName);
+	generateGitIgnoreFile();
 	end = clock();
 
 	printf("Elapsed Time : %8.2fms\nHappy Coding...:)\n", difftime(end, start));
@@ -49,12 +50,9 @@ void App::run()
 	std::string output{};
 	readNewtonFile(output);
 	projectName = output;
-	std::cout <<"Project : " << projectName << "\n";
-	std::cout << "OS : ";
 
 	std::string run{};
 #ifdef WIN32
-	std::cout << "Microsoft Windows\n";
 	run += ".\\build\\";
 	run += projectName;
 	run += ".exe";
@@ -64,14 +62,20 @@ void App::run()
 	run += projectName;
 #endif // WIN32
 
-	std::cout << "----------------------------------\n\n";
-	
 	if (system(run.c_str()))
 	{
 		std::cout << run << "\n";
 		printf("\n[error] Maybe You should Compile First Before run or You have Permission to execute program!\n");
 	};
-};
+}
+void App::build()
+{
+
+	this->compile();
+	printf("\nOutput: \n");
+	this->run();
+}
+;
 
 void App::generateNewtonFile(const std::string& path)
 {
@@ -175,4 +179,31 @@ cmake_minimum_required(VERSION 3.0)
 		file << "install(TARGETS ${PROJECT_NAME} DESTINATION bin)\n";
 		file.close();
 	};
-};
+}
+void App::generateGitIgnoreFile()
+{
+	std::ofstream file;
+	file.open("./" + projectName + "/.gitignore", std::ios::out);
+	if (file.is_open())
+	{
+		const std::string cmakeCode{
+			R"(
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+)" };
+		file << cmakeCode;
+
+		file.close();
+	};
+}
+;
