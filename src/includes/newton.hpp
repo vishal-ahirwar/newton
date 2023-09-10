@@ -15,6 +15,7 @@ public:
       void compile();
       void run();
       void build();
+      void setup();
 private:
       void generateNewtonFile(const std::string &);
       void readNewtonFile(std::string &);

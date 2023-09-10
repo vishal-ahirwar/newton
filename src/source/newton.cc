@@ -75,6 +75,10 @@ void App::build()
 	printf("\nOutput: \n");
 	this->run();
 }
+void App::setup()
+{
+	printf("\x1b[1;31m [msg]\t:this feature is currently in development or maybe your CLI is not up to date!\n\x1b[2;37;41m");
+}
 ;
 
 void App::generateNewtonFile(const std::string& path)
