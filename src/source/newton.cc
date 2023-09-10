@@ -1,15 +1,16 @@
 #include "../includes/newton.hpp"
 #include<filesystem>
+#include"../includes/colors.hpp"
 
 void App::createNewProject(const char* argv[])
 {
 	clock_t start = clock(), end = 0;
 
-	printf("Creating directory ....\n");
+	printf("%sCreating directory ....\n%s",GREEN,WHITE);
 
 	std::string cmdString{};
 	createDir(argv[2]);
-	printf("Generating Code for main.c and CMakeLists.txt ....\n");
+	printf("%sGenerating Code for main.c and CMakeLists.txt ....\n%s",GREEN,WHITE);
 
 	generateCppTemplateFile(argv[2]);
 	generateCmakeFile(argv[2]);
@@ -17,12 +18,12 @@ void App::createNewProject(const char* argv[])
 	generateGitIgnoreFile();
 	end = clock();
 
-	printf("Elapsed Time : %8.2fms\nHappy Coding...:)\n", difftime(end, start));
+	printf("%sElapsed Time : %8.2fms\nWith great power comes great responsibility\n%s", YELLOW, difftime(end, start),WHITE);
 };
 
 void App::compile()
 {
-	printf("[newton] Compile Process has been started ....\n");
+	printf("%sCompile Process has been started ....\n%s",BLUE,WHITE);
 #ifdef WIN32
 	if (!system("cmake -S . -B build -G \"MinGW Makefiles\" "))
 	{
@@ -30,7 +31,7 @@ void App::compile()
 	}
 	else
 	{
-		printf("\n[error] Make Sure You are in Your Project's Directory!\n");
+		printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s",RED,WHITE);
 	};
 #else
 	if (!system("cmake -S . -B build"))
@@ -39,7 +40,7 @@ void App::compile()
 	}
 	else
 	{
-		printf("\n[error] Make Sure You are in Your Project's Directory!\n");
+		printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s",RED,WHITE);
 	};
 #endif
 
@@ -57,27 +58,25 @@ void App::run()
 	run += projectName;
 	run += ".exe";
 #else
-	std::cout << "Unix Based OS\n";
 	run += "./build/";
 	run += projectName;
 #endif // WIN32
 
 	if (system(run.c_str()))
 	{
-		std::cout << run << "\n";
-		printf("\n[error] Maybe You should Compile First Before run or You have Permission to execute program!\n");
+		printf("%s\n[error] Maybe You should Compile First Before run or You have Permission to execute program!\n%s",RED,WHITE);
 	};
 }
 void App::build()
 {
 
 	this->compile();
-	printf("\nOutput: \n");
+	printf("%s\nOutput: \n%s",YELLOW,WHITE);
 	this->run();
 }
 void App::setup()
 {
-	printf("\x1b[1;31m [msg]\t:this feature is currently in development or maybe your CLI is not up to date!\n\x1b[2;37;41m");
+	printf("%sthis feature is currently in development or maybe your CLI is not up to date!\n%s",CYAN,WHITE);
 }
 ;
 
@@ -96,7 +95,7 @@ void App::generateNewtonFile(const std::string& path)
 	}
 	else
 	{
-		printf("something went wrong!\n");
+		printf("%ssomething went wrong!\n%s",RED,WHITE);
 	}
 }
 void App::readNewtonFile(std::string& output)
@@ -109,7 +108,7 @@ void App::readNewtonFile(std::string& output)
 	}
 	else
 	{
-		printf("newton file setting.nn doesn't exist!\n");
+		printf("%snewton file setting.nn doesn't exist!\n%s",RED,WHITE);
 	};
 }
 
@@ -131,7 +130,7 @@ void App::createDir(const char* argv)
 		fs::create_directory(cmdString.c_str());
 	}
 	else {
-		puts("error!");
+		printf("%sfailed to create dir error!%s",RED,WHITE);
 	}
 
 };
