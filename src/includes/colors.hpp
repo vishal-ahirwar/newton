@@ -1,11 +1,11 @@
 #ifndef COLORS_HPP
 #define COLORS_HPP
 //Copyright Vishal Ahirwar.All rights reserved. 
-#define RED "\033[31;40m"
-#define BLUE "\033[34;40m"
-#define YELLOW "\033[33;40m"
-#define WHITE "\033[37;40m"
-#define CYAN "\033[36;40m"
-#define MEGENTA "\033[35;40m"
-#define GREEN "\033[32;40m"
+#define RED "\x1b[38;5;196m"
+#define BLUE "\x1b[38;5;21m"
+#define YELLOW "\x1b[38;5;226m"
+#define WHITE "\x1b[38;5;15m"
+#define CYAN "\x1b[38;5;123m"
+#define MEGENTA "\x1b[38;5;125m"
+#define GREEN "\x1b[38;5;40m"
 #endif
