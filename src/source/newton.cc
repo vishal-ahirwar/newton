@@ -1,7 +1,8 @@
 #include "../includes/newton.hpp"
 #include<filesystem>
 #include"../includes/colors.hpp"
-
+#include<ctime>
+#include<string>
 void App::createNewProject(const char* argv[])
 {
 	clock_t start = clock(), end = 0;
@@ -76,7 +77,9 @@ void App::build()
 }
 void App::setup()
 {
-	printf("%sthis feature is currently in development or maybe your CLI is not up to date!\n%s",CYAN,WHITE);
+	printf("%sAdding newton CLI to path...%s\n", YELLOW, WHITE);
+
+	printf("\n%sthis feature is currently in development or maybe your CLI is not up to date!\n%s",CYAN,WHITE);
 }
 ;
 
@@ -87,9 +90,12 @@ void App::generateNewtonFile(const std::string& path)
 	std::ofstream file(newFileName.c_str(), std::ios::out);
 	if (file.is_open())
 	{
+		time_t now{ time(NULL) };
+		const char* dateTime{ ctime(&now) };
 
 		file << projectName << "\n";
-		file << "Project created at : " << __DATE__ << "\n";
+		file << "Project created on : " <<dateTime<< "\n";
+		printf("%sProject Creation date : %s%s", YELLOW, dateTime, WHITE);
 		file << "Note: Please don't remove or edit this file!\n";
 		file.close();
 	}
@@ -103,7 +109,10 @@ void App::readNewtonFile(std::string& output)
 	std::ifstream file("setting.nn");
 	if (file.is_open())
 	{
-		file >> output;
+		std::getline(file, output);
+		std::string dateTime{};
+		std::getline(file, dateTime);
+		printf("%s%s%s\n", YELLOW, dateTime.c_str(), WHITE);
 		file.close();
 	}
 	else
@@ -131,6 +140,7 @@ void App::createDir(const char* argv)
 	}
 	else {
 		printf("%sfailed to create dir error!%s",RED,WHITE);
+		exit(0);
 	}
 
 };
