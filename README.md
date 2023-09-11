@@ -1,9 +1,8 @@
 # C/C++ CLI Open Source Project
-![image](https://github.com/vishal-ahirwar/newton/assets/73791462/5684f44f-0bc8-4282-9ed2-134bc90aef30)
-
-![image](https://github.com/vishal-ahirwar/newton/assets/73791462/13e00b1d-e78d-4630-84d0-4737626b78fd)
-![image](https://github.com/vishal-ahirwar/newton/assets/73791462/72376da9-187a-44d0-b00f-72eb9b017050)
-![image](https://github.com/vishal-ahirwar/newton/assets/73791462/747fb233-2572-4d53-9828-a6f5ebca85ce)
+![image](https://github.com/vishal-ahirwar/newton/assets/73791462/b640d23e-b505-4a78-b886-025c1f7c89c2)
+![image](https://github.com/vishal-ahirwar/newton/assets/73791462/da27be9d-d6bd-414d-97e5-1cf9d770cfde)
+![image](https://github.com/vishal-ahirwar/newton/assets/73791462/d454f5a7-9f67-455f-bdec-41afdbae6bbd)
+![image](https://github.com/vishal-ahirwar/newton/assets/73791462/e94b7310-9414-4d6b-95b4-610d33849a06)
 
 ### CLI For C/C++ Project Development
 
