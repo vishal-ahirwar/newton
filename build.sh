@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# Create a build directory (if it doesn't exist) and navigate to it
-mkdir -p build
-cd build
+# Clone the project, find CMakeLists.txt and Create a build directory.
+git clone https://github.com/vishal-ahirwar/newton
+cd newton
+cmake -S . -B build
 
-# Run CMake to configure the project
-cmake ..
-
-# Compile the project using make (you can adjust the number of CPU cores with -j)
-make -j$(nproc)
+# Compile and Install the project
+sudo make install
