@@ -15,7 +15,7 @@ or if you are on windows System make sure to download mingw and cmake both are c
 minGW : https://sourceforge.net/projects/mingw/
 CMake : https://cmake.org/
 
-Just run newton once you it will prompt you all the available commands
+Just run newton once  it will prompt you all the available commands
 Thank You for All of the project contributers and Users
 ![image width=512](https://github.com/vishal-ahirwar/newton/assets/73791462/b640d23e-b505-4a78-b886-025c1f7c89c2)
 ![image](https://github.com/vishal-ahirwar/newton/assets/73791462/da27be9d-d6bd-414d-97e5-1cf9d770cfde)
