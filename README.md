@@ -1,4 +1,4 @@
-![Build Status](https://github.com/vishal-ahirwar/newton/workflows/cmake-multi-platform.yml/badge.svg?event=push)
+![Build Status](https://github.com/vishal-ahirwar/newton/actions/workflows/cmake-multi-platform.yml/badge.svg?event=push)
 # C/C++ CLI Open Source Project
 ![image](https://github.com/vishal-ahirwar/newton/assets/73791462/b640d23e-b505-4a78-b886-025c1f7c89c2)
 ![image](https://github.com/vishal-ahirwar/newton/assets/73791462/da27be9d-d6bd-414d-97e5-1cf9d770cfde)
