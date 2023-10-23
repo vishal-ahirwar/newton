@@ -195,11 +195,14 @@ void App::generateCmakeFile(const char* argv)
 #Auto Genrated CMake file by newton CLI
 #Copyright 2023 Vishal Ahirwar. #replace with your copyright notice.
 cmake_minimum_required(VERSION 3.0)
-set(CMAKE_CXX_STANDARD 17)
-)" };
+set(CMAKE_CXX_STANDARD 17))" };
 		file << cmakeCode << "\n";
 		file << "project(" << argv << ")\n";
-		file << "add_executable(${PROJECT_NAME} ./src/main.cc)\n";
+		file << "set(SOURCE ./src/main.cc)#add your additional source file here!\n";
+		/*
+		set(SOURCE ./src/main.cc ./src/player.cc ./src/person.cc)
+		add_executable(${PROJECT_NAME} ${SOURCE})*/
+		file << "add_executable(${PROJECT_NAME} ${SOURCE})\n";
 		file << "install(TARGETS ${PROJECT_NAME} DESTINATION bin)\n";
 		file.close();
 	};
