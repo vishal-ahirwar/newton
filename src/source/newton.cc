@@ -3,6 +3,10 @@
 #include"../includes/colors.hpp"
 #include<ctime>
 #include<string>
+#include<stdio.h>
+#ifndef WIN32
+#include<unistd.h>
+#endif
 void App::createNewProject(const char* argv[])
 {
 	clock_t start = clock(), end = 0;
@@ -17,6 +21,8 @@ void App::createNewProject(const char* argv[])
 	generateCmakeFile(argv[2]);
 	generateNewtonFile(projectName);
 	generateGitIgnoreFile();
+
+
 	end = clock();
 
 	printf("%sElapsed Time : %8.2fms\nWith great power comes great responsibility\n%s", YELLOW, difftime(end, start),WHITE);
@@ -28,7 +34,8 @@ void App::compile()
 #ifdef WIN32
 	if (!system("cmake -S . -B build -G \"MinGW Makefiles\" "))
 	{
-		system("mingw32-make -C build");
+		if(!system("mingw32-make -C build"))//if there is any kind of error then don't clear the terminal
+		system("cls");
 	}
 	else
 	{
@@ -37,7 +44,8 @@ void App::compile()
 #else
 	if (!system("cmake -S . -B build"))
 	{
-		system("make -C build/");
+		if(!system("make -C build/"))//if there is any kind of error then don't clear the terminal
+		system("clear");
 	}
 	else
 	{
@@ -54,6 +62,7 @@ void App::run()
 	projectName = output;
 
 	std::string run{};
+	//printf("%s%s: \n%s", YELLOW, projectName.c_str(),WHITE);
 #ifdef WIN32
 	run += ".\\build\\";
 	run += projectName;
@@ -68,20 +77,20 @@ void App::run()
 		printf("%s\n[error] Maybe You should Compile First Before run or You have Permission to execute program!\n%s",RED,WHITE);
 	};
 }
+
 void App::build()
 {
 
 	this->compile();
-	printf("%s\nOutput: \n%s",YELLOW,WHITE);
 	this->run();
 }
+
 void App::setup()
 {
 	printf("%sAdding newton CLI to path...%s\n", YELLOW, WHITE);
 
 	printf("\n%sthis feature is currently in development or maybe your CLI is not up to date!\n%s",CYAN,WHITE);
-}
-;
+};
 
 void App::generateNewtonFile(const std::string& path)
 {
@@ -94,7 +103,7 @@ void App::generateNewtonFile(const std::string& path)
 		const char* dateTime{ ctime(&now) };
 
 		file << projectName << "\n";
-		file << "Project created on : " <<dateTime<< "\n";
+		file << "Project created on " <<dateTime<< "\n";
 		printf("%sProject Creation date : %s%s", YELLOW, dateTime, WHITE);
 		file << "Note: Please don't remove or edit this file!\n";
 		file.close();
@@ -104,6 +113,7 @@ void App::generateNewtonFile(const std::string& path)
 		printf("%ssomething went wrong!\n%s",RED,WHITE);
 	}
 }
+
 void App::readNewtonFile(std::string& output)
 {
 	std::ifstream file("setting.nn");
@@ -112,7 +122,7 @@ void App::readNewtonFile(std::string& output)
 		std::getline(file, output);
 		std::string dateTime{};
 		std::getline(file, dateTime);
-		printf("%s%s%s\n", YELLOW, dateTime.c_str(), WHITE);
+		printf("%s[%s: %s]%s\n\n", YELLOW,output.c_str() ,dateTime.c_str(), WHITE);
 		file.close();
 	}
 	else
@@ -182,8 +192,8 @@ void App::generateCmakeFile(const char* argv)
 	{
 		const std::string cmakeCode{
 			R"(
-#Auto Genrated C++ file by newton CLI
-#Copyright2023 Vishal Ahirwar. #replace with your copyright notice.
+#Auto Genrated CMake file by newton CLI
+#Copyright 2023 Vishal Ahirwar. #replace with your copyright notice.
 cmake_minimum_required(VERSION 3.0)
 set(CMAKE_CXX_STANDARD 17)
 )" };
@@ -194,6 +204,7 @@ set(CMAKE_CXX_STANDARD 17)
 		file.close();
 	};
 }
+
 void App::generateGitIgnoreFile()
 {
 	std::ofstream file;
