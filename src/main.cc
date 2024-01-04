@@ -1,5 +1,6 @@
 #define RELEASE
-#include "./includes/app.h"
+#include "app.h"
+
 extern int argCount{};
 int main(int argc, char *argv[])
 {

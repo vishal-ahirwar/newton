@@ -1,5 +1,4 @@
-#ifndef COLORS_HPP
-#define COLORS_HPP
+#pragma once
 //Copyright Vishal Ahirwar.All rights reserved. 
 #define RED "\x1b[38;5;196m"
 #define BLUE "\x1b[38;5;21m"
@@ -8,4 +7,3 @@
 #define CYAN "\x1b[38;5;123m"
 #define MEGENTA "\x1b[38;5;125m"
 #define GREEN "\x1b[38;5;40m"
-#endif
