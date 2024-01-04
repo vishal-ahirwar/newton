@@ -1,12 +1,16 @@
-#include "../includes/newton.hpp"
-#include<filesystem>
-#include"../includes/colors.hpp"
-#include<ctime>
-#include<string>
-#include<stdio.h>
+#include "newton.hpp"
+#include "colors.hpp"
+
+#include <filesystem>
+#include <ctime>
+#include <string>
+#include <stdio.h>
+#include <fstream>
+
 #ifndef WIN32
-#include<unistd.h>
+#include <unistd.h>
 #endif
+
 void App::createNewProject(const char* argv[])
 {
 	clock_t start = clock(), end = 0;

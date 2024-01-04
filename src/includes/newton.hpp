@@ -1,10 +1,7 @@
-#ifndef __NEWTON__
-#define __NEWTON__
-#include "../includes/version.hpp"
-#include <fstream>
-#include <string.h>
-#include <time.h>
-#include <iostream>
+#pragma once
+
+#include <string>
+
 class App
 {
 private:
@@ -24,5 +21,3 @@ private:
       void generateCmakeFile(const char *);
       void generateGitIgnoreFile();
 };
-
-#endif
