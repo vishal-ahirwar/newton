@@ -38,8 +38,10 @@ void App::compile()
 #ifdef WIN32
 	if (!system("cmake -S . -B build -G \"MinGW Makefiles\" "))
 	{
-		if(!system("mingw32-make -C build"))//if there is any kind of error then don't clear the terminal
-		system("cls");
+		if (!system("mingw32-make -C build"))//if there is any kind of error then don't clear the terminal
+			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
+		else
+			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
 	}
 	else
 	{
@@ -49,7 +51,9 @@ void App::compile()
 	if (!system("cmake -S . -B build"))
 	{
 		if(!system("make -C build/"))//if there is any kind of error then don't clear the terminal
-		system("clear");
+			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
+		else 
+			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
 	}
 	else
 	{
@@ -171,7 +175,7 @@ void App::generateCppTemplateFile(const char* argv)
 		std::string mainCode{
 			R"(
 //Auto Genrated C++ file by newton CLI
-//Copyright 2023 Vishal Ahirwar //replace it with yout copyright notice!
+//Copyright 2023 Vishal Ahirwar //replace it with your copyright notice!
 #include<iostream>
 int main(int argc,char*argv[])
 {
