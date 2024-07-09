@@ -20,4 +20,5 @@ private:
       void generateCppTemplateFile(const char *);
       void generateCmakeFile(const char *);
       void generateGitIgnoreFile();
+      void setupUnitTestingFramework();
 };
