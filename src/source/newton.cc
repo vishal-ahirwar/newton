@@ -35,7 +35,6 @@ gtest_discover_tests(${PROJECT_NAME})
 )"};
 
 		file <<fetch_content;
-		printf("%s",fetch_content.c_str());
 		file.close();
 		printf("%s[Msg] : GTest added for unit testing :)%s\n", GREEN, WHITE);
 	}
