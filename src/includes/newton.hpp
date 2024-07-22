@@ -8,7 +8,7 @@ private:
     std::string projectName;
 
 public:
-      void createNewProject(const char *argv[]);
+      void createNewProject(const char *argv[],int);
       void compile();
       void run();
       void build();

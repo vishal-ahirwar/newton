@@ -34,7 +34,7 @@ include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})
 )"};
 
-		file <<fetch_content;
+		file << fetch_content;
 		file.close();
 		printf("%s[Msg] : GTest added for unit testing :)%s\n", GREEN, WHITE);
 	}
@@ -44,7 +44,7 @@ gtest_discover_tests(${PROJECT_NAME})
 	}
 }
 
-void App::createNewProject(const char *argv[])
+void App::createNewProject(const char *argv[], int argc)
 {
 	clock_t start = clock(), end = 0;
 
@@ -56,8 +56,11 @@ void App::createNewProject(const char *argv[])
 
 	generateCppTemplateFile(argv[2]);
 	generateCmakeFile(argv[2]);
-	if (argv[3] == std::string("--gtest"))
-		setupUnitTestingFramework();
+	if (argc == 4)
+	{
+		if (argv[3] == std::string("--gtest"))
+			setupUnitTestingFramework();
+	}
 	generateNewtonFile(projectName);
 	generateGitIgnoreFile();
 

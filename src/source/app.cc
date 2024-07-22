@@ -19,7 +19,7 @@ namespace CLI
             NEWTON_COMPANY, NEWTON_COPYRIGHT, CYAN, GREEN, WHITE);
         return 0;
     }
-    int createApp(const char *argv[])
+    int createApp(const char *argv[],int argc)
     {
         App app;
         if (std::string(argv[1]) == std::string("create"))
@@ -30,7 +30,7 @@ namespace CLI
                 return 1;
             };
 
-            app.createNewProject(argv);
+            app.createNewProject(argv,argCount);
         }
         else if (std::string(argv[1]) == std::string("help"))
         {

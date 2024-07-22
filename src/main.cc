@@ -6,5 +6,5 @@ int main(int argc, char *argv[])
 {
     if (argc < 2)return CLI::showHelp();
     argCount = argc;
-    return CLI::createApp((const char **)argv);
+    return CLI::createApp((const char **)argv,argc);
 };
