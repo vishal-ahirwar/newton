@@ -20,5 +20,5 @@ Thank You for All of the project contributers and Users
 <img width=1604 src="https://github.com/vishal-ahirwar/newton/assets/73791462/b640d23e-b505-4a78-b886-025c1f7c89c2"/><img width=1604 src="https://github.com/vishal-ahirwar/newton/assets/73791462/da27be9d-d6bd-414d-97e5-1cf9d770cfde"/><img width=1604 src="https://github.com/vishal-ahirwar/newton/assets/73791462/d454f5a7-9f67-455f-bdec-41afdbae6bbd"/>
 
 ```
-Copyright©2022 Vishal Ahirwar and Contributers. all rights reserved.
+Copyright©2022 Vishal Ahirwar and Contributors. all rights reserved.
 ```
