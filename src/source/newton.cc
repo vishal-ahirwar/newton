@@ -17,7 +17,8 @@ void App::setupUnitTestingFramework()
 	file.open("CMakeLists.txt", std::ios::app);
 	if (file.is_open())
 	{
-		std::string fetch_content{R"(include(FetchContent)
+		std::string fetch_content{R"(
+include(FetchContent)
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/34ad51b.zip
