@@ -13,6 +13,8 @@ public:
       void run();
       void build();
       void setup();
+      void createInstaller();
+      void gTest();
 private:
       void generateNewtonFile(const std::string &);
       void readNewtonFile(std::string &);
@@ -21,4 +23,5 @@ private:
       void generateCmakeFile(const char *);
       void generateGitIgnoreFile();
       void setupUnitTestingFramework();
+      void generateLicenceFile();
 };

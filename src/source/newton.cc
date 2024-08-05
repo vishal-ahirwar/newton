@@ -14,7 +14,7 @@
 void App::setupUnitTestingFramework()
 {
 	std::ofstream file;
-	file.open("./" + projectName + "/CMakeLists.txt", std::ios::app);
+	file.open("CMakeLists.txt", std::ios::app);
 	if (file.is_open())
 	{
 		std::string fetch_content{R"(include(FetchContent)
@@ -56,14 +56,8 @@ void App::createNewProject(const char *argv[], int argc)
 
 	generateCppTemplateFile(argv[2]);
 	generateCmakeFile(argv[2]);
-	if (argc == 4)
-	{
-		if (argv[3] == std::string("--gtest"))
-			setupUnitTestingFramework();
-	}
 	generateNewtonFile(projectName);
 	generateGitIgnoreFile();
-
 	end = clock();
 
 	printf("%sElapsed Time : %8.2fms\nWith great power comes great responsibility\n%s", YELLOW, difftime(end, start), WHITE);
@@ -278,4 +272,66 @@ _deps
 
 		file.close();
 	};
+};
+
+void App::generateLicenceFile()
+{
+	const std::string text{R"(
+Copyright(C)<YEAR> <COPYRIGHT_HOLDER>.
+
+Permission is hereby granted, free of charge,
+to any person obtaining a copy of this software and associated documentation files (the “Software”),
+to deal in the Software without restriction, including without limitation the rights to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE)"};
+
+	std::ofstream out;
+	out.open("License.txt", std::ios_base::out);
+	if (!out.is_open())
+	{
+		printf("%s[Error]Failed to Generate License.txt, You may need to create License.txt by yourself :)%s", RED, WHITE);
+		return;
+	};
+	out << text;
+	out.close();
+};
+
+void App::createInstaller()
+{
+	std::ofstream file;
+	file.open("CMakeLists.txt", std::ios::app);
+	if (file.is_open())
+	{
+		std::string out{R"(
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VENDOR "Cool \"Company\"")
+include(CPack))"};
+		file << out;
+		file.close();
+		generateLicenceFile();
+		if(!system("cd build && cpack"))
+		printf("%s[Msg]CPack added to cmake run 'cpack' command from build directory to build a installer :)%s\n", GREEN, WHITE);
+	}
+	else
+	{
+		printf("%s[Msg]Something went wrong :(%s\n", RED, WHITE);
+	}
+};
+
+void App::gTest()
+{
+	setupUnitTestingFramework();
+	build();
 };
