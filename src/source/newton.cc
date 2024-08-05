@@ -322,7 +322,7 @@ include(CPack))"};
 		file << out;
 		file.close();
 		generateLicenceFile();
-		if(!system("cd build && cpack"))
+		if(system("cd build && cpack"))
 		printf("%s[Msg]CPack added to cmake run 'cpack' command from build directory to build a installer :)%s\n", GREEN, WHITE);
 	}
 	else
