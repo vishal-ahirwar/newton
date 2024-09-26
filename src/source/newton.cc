@@ -141,7 +141,8 @@ void App::setup()
 				{
 					printf("%sAll done%s",BLUE,WHITE);
 				}
-			}
+			};
+			
 		}else
 		{
 			printf("%sSomething went wrong!%s\n",RED,WHITE);
