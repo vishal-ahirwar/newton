@@ -8,6 +8,7 @@ set(COPYRIGHT "Copyright(c) ${CURRENT_YEAR} Vishal Ahirwar and all Contributors.
 
 configure_file(newtonConfig.h.in newtonConfig.h)
 
+
 add_executable(${PROJECT_NAME} 
     src/main.cc
     src/source/app.cc
