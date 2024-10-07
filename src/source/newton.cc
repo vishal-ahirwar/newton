@@ -154,7 +154,7 @@ void App::setup()
 		printf("%sokie:)%s\n", CYAN, WHITE);
 	};
 #else
-	printf("%sNot Availble on Linux :(%s", CYAN, WHITE);
+	printf("%sNot Availble on Linux :(%s\n", CYAN, WHITE);
 #endif
 };
 
