@@ -126,32 +126,36 @@ void App::build()
 
 void App::setup()
 {
-	printf("%s[Important] Make sure run this command with administrator privileges%s\n",CYAN,WHITE);
+#if defined(WIN32)
+	printf("%s[Important] Make sure run this command with administrator privileges%s\n", CYAN, WHITE);
 	printf("%sThis will install MinGW-13 Compiler and CMake 3.30,\nAre you sure you want to continue??[y/n] %s\n", YELLOW, WHITE);
 	char input{};
-	scanf("%c",&input);
-	if(input=='y'||input=='Y')
+	scanf("%c", &input);
+	if (input == 'y' || input == 'Y')
 	{
 		printf("Installing Choco xd...\n");
-		if(system("powershell -Command Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))")==0)
+		if (system("powershell -Command Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))") == 0)
 		{
-			if(system("choco install mingw")==0)
+			if (system("choco install mingw") == 0)
 			{
-				if(system("choco install cmake")==0)
+				if (system("choco install cmake") == 0)
 				{
-					printf("%sAll done%s",BLUE,WHITE);
+					printf("%sAll done%s", BLUE, WHITE);
 				}
 			};
-			
-		}else
-		{
-			printf("%sSomething went wrong!%s\n",RED,WHITE);
 		}
-	}else
+		else
+		{
+			printf("%sSomething went wrong!%s\n", RED, WHITE);
+		}
+	}
+	else
 	{
-		printf("%sokie:)%s\n",CYAN,WHITE);
+		printf("%sokie:)%s\n", CYAN, WHITE);
 	};
-
+#else
+	printf("%sNot Availble on Linux :(%s", CYAN, WHITE);
+#endif
 };
 
 void App::generateNewtonFile(const std::string &path)
@@ -345,8 +349,8 @@ include(CPack))"};
 		file << out;
 		file.close();
 		generateLicenceFile();
-		if(system("cd build && cpack"))
-		printf("%s[Msg]CPack added to cmake run 'cpack' command from build directory to build a installer :)%s\n", GREEN, WHITE);
+		if (system("cd build && cpack"))
+			printf("%s[Msg]CPack added to cmake run 'cpack' command from build directory to build a installer :)%s\n", GREEN, WHITE);
 	}
 	else
 	{
