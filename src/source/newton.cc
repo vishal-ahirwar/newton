@@ -126,7 +126,7 @@ void App::build()
 
 void App::setup()
 {
-#if defined(WIN32)
+#ifdef WIN32
 	printf("%s[Important] Make sure run this command with administrator privileges%s\n", CYAN, WHITE);
 	printf("%sThis will install MinGW-13 Compiler and CMake 3.30,\nAre you sure you want to continue??[y/n] %s\n", YELLOW, WHITE);
 	char input{};
@@ -261,7 +261,10 @@ void App::generateCmakeFile(const char *argv)
 #Auto Genrated CMake file by newton CLI
 #Copyright 2023 Vishal Ahirwar. #replace with your copyright notice.
 cmake_minimum_required(VERSION 3.0)
-set(CMAKE_CXX_STANDARD 17))"};
+set(CMAKE_CXX_STANDARD 17))
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")"};
 		file << cmakeCode << "\n";
 		file << "project(" << argv << ")\n";
 		file << "set(SOURCE ./src/main.cc)#add your additional source file here!\n";
