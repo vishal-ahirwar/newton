@@ -127,6 +127,8 @@ void App::build()
 void App::setup()
 {
 #ifdef WIN32
+	printf("%sAdding newton to PATH variable%s",BLUE,WHITE);
+	//TODO
 	printf("%s[Important] Make sure run this command with administrator privileges%s\n", CYAN, WHITE);
 	printf("%sThis will install MinGW-13 Compiler and CMake 3.30,\nAre you sure you want to continue??[y/n] %s\n", YELLOW, WHITE);
 	char input{};
