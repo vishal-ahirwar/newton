@@ -1,7 +1,7 @@
 #ifndef _CONSTANT_
 #define _CONSTANT_
 #include <string>
-const std::string LICENSE_TEXT{R"(
+constexpr std::string_view LICENSE_TEXT{R"(
 Copyright(C)<YEAR> <COPYRIGHT_HOLDER>.
 
 Permission is hereby granted, free of charge,
@@ -19,7 +19,7 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE)"};
 
-std::string CPACK_CODE{R"(
+constexpr std::string_view CPACK_CODE{R"(
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
@@ -27,7 +27,7 @@ set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
 set(CPACK_PACKAGE_VENDOR "Cool \"Company\"")
 include(CPack))"};
 
-const std::string GITIGNORE_CODE{
+constexpr std::string_view GITIGNORE_CODE{
     R"(
 CMakeLists.txt.user
 CMakeCache.txt
@@ -43,11 +43,11 @@ _deps
 
 )"};
 
-const std::string CMAKE_CODE{
+constexpr std::string_view CMAKE_CODE{
     R"(
 #Auto Genrated CMake file by newton CLI
 #Copyright 2023 Vishal Ahirwar. #replace with your copyright notice.
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
@@ -66,7 +66,7 @@ int main(int argc,char*argv[])
 
 )"};
 
-std::string GTEST_CODE{R"(
+constexpr std::string_view GTEST_CODE{R"(
 include(FetchContent)
 FetchContent_Declare(
   googletest
