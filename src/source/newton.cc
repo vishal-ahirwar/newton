@@ -6,7 +6,7 @@
 #include <string>
 #include <stdio.h>
 #include <fstream>
-
+#include "constant.hpp"
 #ifndef WIN32
 #include <unistd.h>
 #endif
@@ -17,25 +17,8 @@ void App::setupUnitTestingFramework()
 	file.open("CMakeLists.txt", std::ios::app);
 	if (file.is_open())
 	{
-		std::string fetch_content{R"(
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/34ad51b.zip
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-enable_testing()
-target_link_libraries(
-  ${PROJECT_NAME}
-  GTest::gtest_main
-)
-include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME})
-)"};
 
-		file << fetch_content;
+		file << GTEST_CODE;
 		file.close();
 		printf("%s[Msg] : GTest added for unit testing :)%s\n", GREEN, WHITE);
 	}
@@ -124,16 +107,30 @@ void App::build()
 	this->run();
 }
 
-void App::setup()
+void addToPathWin32()
 {
-#ifdef WIN32
-	printf("%sAdding newton to PATH variable%s",BLUE,WHITE);
-	//TODO
+	printf("%sWould you like to add newton to PATH Variable?y/n%s", RED, WHITE);
+	if (char c; scanf(" %c", &c), c != 'y' || c != 'Y')
+		return;
+	printf("%s[TODO]Adding newton to PATH variable%s\n", BLUE, WHITE);
+
+	namespace fs = std::filesystem;
+	auto current_path = fs::current_path().string();
+
+	std::string path = "setx PATH \"%PATH%;" + current_path + "\"";
+	if (!system(path.c_str()))
+		printf("%s%s added to path %s\n", CYAN, current_path.c_str(), WHITE);
+}
+void addToPathUnix()
+{
+	printf("%sNot Availble on Linux :(%s\n", CYAN, WHITE);
+};
+
+void installDevelopmentStuffWin32()
+{
 	printf("%s[Important] Make sure run this command with administrator privileges%s\n", CYAN, WHITE);
 	printf("%sThis will install MinGW-13 Compiler and CMake 3.30,\nAre you sure you want to continue??[y/n] %s\n", YELLOW, WHITE);
-	char input{};
-	scanf("%c", &input);
-	if (input == 'y' || input == 'Y')
+	if (char input; scanf(" %c", &input), input == 'y' || input == 'Y')
 	{
 		printf("Installing Choco xd...\n");
 		if (system("powershell -Command Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))") == 0)
@@ -155,8 +152,16 @@ void App::setup()
 	{
 		printf("%sokie:)%s\n", CYAN, WHITE);
 	};
+};
+
+void App::setup()
+{
+
+#ifdef WIN32
+	addToPathWin32();
+	installDevelopmentStuffWin32();
 #else
-	printf("%sNot Availble on Linux :(%s\n", CYAN, WHITE);
+	addToPathUnix();
 #endif
 };
 
@@ -232,22 +237,11 @@ void App::generateCppTemplateFile(const char *argv)
 
 	if (file.is_open())
 	{
-		std::string mainCode{
-			R"(
-//Auto Genrated C++ file by newton CLI
-//Copyright 2023 Vishal Ahirwar //replace it with your copyright notice!
-#include<iostream>
-int main(int argc,char*argv[])
-{
-    std::cout<<"@";
-    return 0;
-};
 
-)"};
-		auto pos = mainCode.find("@");
+		auto pos = MAIN_CODE.find("@");
 		std::string str{std::string("Hello, ") + projectName + std::string("\\nhappy coding journey :)\\n")};
-		mainCode.insert(pos + 1, str);
-		file << mainCode;
+		MAIN_CODE.insert(pos + 1, str);
+		file << MAIN_CODE;
 		file.close();
 	};
 }
@@ -258,16 +252,8 @@ void App::generateCmakeFile(const char *argv)
 	file.open("./" + projectName + "/CMakeLists.txt", std::ios::out);
 	if (file.is_open())
 	{
-		const std::string cmakeCode{
-			R"(
-#Auto Genrated CMake file by newton CLI
-#Copyright 2023 Vishal Ahirwar. #replace with your copyright notice.
-cmake_minimum_required(VERSION 3.0)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static"))"};
-		file << cmakeCode << "\n";
+
+		file << CMAKE_CODE << "\n";
 		file << "project(" << argv << ")\n";
 		file << "set(SOURCE ./src/main.cc)#add your additional source file here!\n";
 		/*
@@ -286,22 +272,8 @@ void App::generateGitIgnoreFile()
 	file.open("./" + projectName + "/.gitignore", std::ios::out);
 	if (file.is_open())
 	{
-		const std::string cmakeCode{
-			R"(
-CMakeLists.txt.user
-CMakeCache.txt
-CMakeFiles
-CMakeScripts
-Testing
-Makefile
-cmake_install.cmake
-install_manifest.txt
-compile_commands.json
-CTestTestfile.cmake
-_deps
 
-)"};
-		file << cmakeCode;
+		file << GITIGNORE_CODE;
 
 		file.close();
 	};
@@ -309,24 +281,6 @@ _deps
 
 void App::generateLicenceFile()
 {
-	const std::string text{R"(
-Copyright(C)<YEAR> <COPYRIGHT_HOLDER>.
-
-Permission is hereby granted, free of charge,
-to any person obtaining a copy of this software and associated documentation files (the “Software”),
-to deal in the Software without restriction, including without limitation the rights to use, copy,
-modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE)"};
-
 	std::ofstream out;
 	out.open("License.txt", std::ios_base::out);
 	if (!out.is_open())
@@ -334,7 +288,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 		printf("%s[Error]Failed to Generate License.txt, You may need to create License.txt by yourself :)%s", RED, WHITE);
 		return;
 	};
-	out << text;
+	out << LICENSE_TEXT;
 	out.close();
 };
 
@@ -344,14 +298,7 @@ void App::createInstaller()
 	file.open("CMakeLists.txt", std::ios::app);
 	if (file.is_open())
 	{
-		std::string out{R"(
-include(InstallRequiredSystemLibraries)
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
-set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
-set(CPACK_PACKAGE_VENDOR "Cool \"Company\"")
-include(CPack))"};
-		file << out;
+		file << CPACK_CODE;
 		file.close();
 		generateLicenceFile();
 		if (system("cd build && cpack"))
