@@ -15,6 +15,7 @@ public:
       void setup();
       void createInstaller();
       void gTest();
+      void fixInstallation();
 private:
       void generateNewtonFile(const std::string &);
       void readNewtonFile(std::string &);
@@ -24,4 +25,9 @@ private:
       void generateGitIgnoreFile();
       void setupUnitTestingFramework();
       void generateLicenceFile();
+private:
+    bool onSetup();
+    void installCompilerAndCMake(bool&);
+    void addToPathUnix();
+    void addToPathWin(const std::string&);
 };
