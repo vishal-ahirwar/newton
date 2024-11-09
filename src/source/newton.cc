@@ -6,7 +6,8 @@
 #include <filesystem>
 #include <fstream>
 #include <stdio.h>
-#include <string>
+#include<string.h>
+#include<iostream>
 #ifndef WIN32
 #include <unistd.h>
 #endif
@@ -104,13 +105,6 @@ void App::build()
 
 void addToPathWin()
 {
-    printf(
-        "%sWould you like to add newton to PATH Variable[Warning : Make sure to run this command "
-        "once!]?y/n%s",
-        RED,
-        WHITE);
-    if (char c; scanf("%c", &c), c != 'y' || c != 'Y')
-        return;
     printf("%sAdding newton to PATH variable%s\n", RED, WHITE);
 
     namespace fs = std::filesystem;
@@ -131,11 +125,13 @@ void addToPathUnix()
 void setupWin()
 {
     printf("%sThis will install MinGW-14 Compiler and CMake 3.30 from Github,\nAre you sure you "
-           "want to "
-           "continue??[y/n] %s\n",
-           YELLOW,
-           WHITE);
-    if (char input; scanf(" %c", &input), input == 'y' || input == 'Y') {
+        "want to "
+        "continue??[y/n] %s\n",
+        YELLOW,
+        WHITE);
+    std::string input{};
+    std::cin >> input;
+    if (tolower(input[0]) == 'y') {
         if (printf("%sInstalling Compiler...%s\n", GREEN, WHITE);
             !system((std::string("powershell -Command wget ") + std::string(COMPILER_URL)
                      + std::string(" -o compiler"))
@@ -175,17 +171,27 @@ void setupWin()
                    RED,
                    WHITE);
         }
+        system("del compiler");
+        system("del cmake");
     } else {
         printf("%sokie:)%s\n", CYAN, WHITE);
     };
-    system("del compiler");
-    system("del cmake");
 };
 
 void App::setup()
 {
 #ifdef WIN32
-    addToPathWin();
+    printf("%sWould you like to add newton to PATH Variable[Warning : Make sure to run this command "
+        "once!]y/n%s\n", RED, WHITE);
+    std::string input{};
+    std::cin.clear();
+    std::cin >> input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    if (tolower(input[0]) == 'y')
+    {
+        addToPathWin();
+    }
+
     setupWin();
 #else
     addToPathUnix();
