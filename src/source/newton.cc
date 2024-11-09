@@ -105,6 +105,7 @@ void App::build()
 
 void addToPathWin()
 {
+    printf("%simplementation is in progress%s\n",YELLOW, WHITE);
     //TODO
 }
 void addToPathUnix()
@@ -122,10 +123,10 @@ void installCompilerAndCmake()
         "continue??[y/n] %s\n",
         YELLOW,
         WHITE);
-    printf("%sinstalling c/c++ compiler and cmake please wait....%s\n", BLUE, WHITE);
     std::string input{};
     std::cin >> input;
     if (tolower(input[0]) != 'y')return;
+    printf("%sinstalling c/c++ compiler and cmake please wait....%s\n", BLUE, WHITE);
     system((std::string("powershell -Command wget ") + std::string(COMPILER_URL)
         + std::string(" -o compiler"))
         .c_str());
