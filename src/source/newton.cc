@@ -105,14 +105,7 @@ void App::build()
 
 void addToPathWin()
 {
-    printf("%sAdding newton to PATH variable%s\n", RED, WHITE);
-
-    namespace fs = std::filesystem;
-    auto current_path = fs::current_path().string();
-
-    std::string path = "setx PATH \"%PATH%;" + current_path + "\"";
-    if (!system(path.c_str()))
-        printf("%s%s added to path %s\n", CYAN, current_path.c_str(), WHITE);
+    //TODO
 }
 void addToPathUnix()
 {
@@ -122,60 +115,27 @@ void addToPathUnix()
            WHITE);
 };
 
-void setupWin()
+void installCompilerAndCmake()
 {
     printf("%sThis will install MinGW-14 Compiler and CMake 3.30 from Github,\nAre you sure you "
         "want to "
         "continue??[y/n] %s\n",
         YELLOW,
         WHITE);
+    printf("%sinstalling c/c++ compiler and cmake please wait....%s\n", BLUE, WHITE);
     std::string input{};
     std::cin >> input;
-    if (tolower(input[0]) == 'y') {
-        if (printf("%sInstalling Compiler...%s\n", GREEN, WHITE);
-            !system((std::string("powershell -Command wget ") + std::string(COMPILER_URL)
-                     + std::string(" -o compiler"))
-                        .c_str())) {
-            printf("%sunzipping compiler...%s\n", GREEN, WHITE);
-            if (!system("tar -xf .\\compiler")) {
-                namespace fs = std::filesystem;
-                auto current_path = fs::current_path().string() + "\\mingw32\\bin";
-                printf("%s", current_path.c_str());
-                std::string path = "setx PATH \"%PATH%;" + current_path + "\"";
-                if (!system(path.c_str()))
-                    printf("%s%s added to path %s\n", CYAN, current_path.c_str(), WHITE);
-
-                if (printf("%sInstalling CMake...%s\n", GREEN, WHITE);
-                    !system((std::string("powershell -Command wget ") + std::string(CMAKE_URL)
-                             + std::string(" -o cmake"))
-                                .c_str())) {
-                    printf("%sunzipping cmake...%s\n", GREEN, WHITE);
-                    if (!system("tar -xf .\\cmake")) {
-                        namespace fs = std::filesystem;
-                        auto current_path = fs::current_path().string()
-                                            + "\\cmake-3.30.5-windows-x86_64\\bin";
-                        printf("%s", current_path.c_str());
-                        std::string path = "setx PATH \"%PATH%;" + current_path + "\"";
-                        if (!system(path.c_str()))
-                            printf("%s%s added to path %s\n", CYAN, current_path.c_str(), WHITE);
-                    }
-                }
-            } else {
-                printf("%sfailed to unzip downloaded compiler file :(%s", RED, WHITE);
-                return;
-            }
-            printf("\n%sSetup Completed!%s\n", GREEN, WHITE);
-        } else {
-            printf("%sDownload failed! make sure you have stable internet connection then try "
-                   "again :)%s\n",
-                   RED,
-                   WHITE);
-        }
-        system("del compiler");
-        system("del cmake");
-    } else {
-        printf("%sokie:)%s\n", CYAN, WHITE);
-    };
+    if (tolower(input[0]) != 'y')return;
+    system((std::string("powershell -Command wget ") + std::string(COMPILER_URL)
+        + std::string(" -o compiler"))
+        .c_str());
+    system((std::string("powershell -Command wget ") + std::string(CMAKE_URL)
+        + std::string(" -o cmake"))
+        .c_str());
+    system("tar -xf ./compiler");
+    system("tar -xf ./cmake");
+    system("del compiler");
+    system("del cmake");
 };
 
 void App::setup()
@@ -192,7 +152,8 @@ void App::setup()
         addToPathWin();
     }
 
-    setupWin();
+    installCompilerAndCmake();
+    //TODO add installed software to path
 #else
     addToPathUnix();
 #endif
