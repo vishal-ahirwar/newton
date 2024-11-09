@@ -106,6 +106,12 @@ void App::build()
 void addToPathWin()
 {
     printf("%simplementation is in progress%s\n",YELLOW, WHITE);
+    std::string home = getenv("USERPROFILE");
+    if (!home.c_str())
+    {
+        std::cout << "HOME is not set!\n";
+        return;
+    };
     //TODO
 }
 void addToPathUnix()
@@ -118,6 +124,7 @@ void addToPathUnix()
 
 void installCompilerAndCmake()
 {
+    namespace fs = std::filesystem;
     printf("%sThis will install MinGW-14 Compiler and CMake 3.30 from Github,\nAre you sure you "
         "want to "
         "continue??[y/n] %s\n",
@@ -126,17 +133,26 @@ void installCompilerAndCmake()
     std::string input{};
     std::cin >> input;
     if (tolower(input[0]) != 'y')return;
+    std::string home = getenv("USERPROFILE");
+    if (!home.c_str())return;
+    if (!fs::create_directory(home + "\\ccli"))
+    {
+        printf("%s ccli dir alread exist%s\n", GREEN, WHITE);
+    };
+    home += "\\ccli";
     printf("%sinstalling c/c++ compiler and cmake please wait....%s\n", BLUE, WHITE);
-    system((std::string("powershell -Command wget ") + std::string(COMPILER_URL)
-        + std::string(" -o compiler"))
+    system((std::string("powershell -Command wget ")+ std::string(COMPILER_URL)
+        + std::string(" -o ")+home+"/compiler")
         .c_str());
-    system((std::string("powershell -Command wget ") + std::string(CMAKE_URL)
-        + std::string(" -o cmake"))
+    system((std::string("powershell -Command wget ") +std::string(CMAKE_URL)
+        + std::string(" -o ")+home+"/cmake")
         .c_str());
-    system("tar -xf ./compiler");
-    system("tar -xf ./cmake");
-    system("del compiler");
-    system("del cmake");
+    printf("%sunzipping file at %s%s\n", BLUE, home.c_str(), WHITE);
+    system((std::string("tar -xf ") + home + "\\compiler"+" -C "+home).c_str());
+    system((std::string("tar -xf ") + home + "\\cmake" + " -C " +home).c_str());
+    printf("%sremoving downloaded archives...%s\n",RED,WHITE);
+    system((std::string("del ") + home + "\\compiler").c_str());
+    system((std::string("del ")+home+"\\cmake").c_str());
 };
 
 void App::setup()
