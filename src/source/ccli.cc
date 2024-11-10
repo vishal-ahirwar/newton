@@ -457,22 +457,22 @@ void App::fixInstallation()
 	printf("%sall clean!%s\n", RED, WHITE);
 	onSetup();
 };
-#ifdef WIN32//For Windows
+#ifdef WIN32 // For Windows
 void createProcess(const std::string &path)
 {
 	STARTUPINFO si = {sizeof(si)};
 	PROCESS_INFORMATION pi;
 	if (CreateProcessA(
-			path.c_str(),	  // Path to updater executable
-			NULL,			  // Command line arguments
-			NULL,			  // Process handle not inheritable
-			NULL,			  // Thread handle not inheritable
-			FALSE,			  // No handle inheritance
+			path.c_str(),		// Path to updater executable
+			NULL,				// Command line arguments
+			NULL,				// Process handle not inheritable
+			NULL,				// Thread handle not inheritable
+			FALSE,				// No handle inheritance
 			CREATE_NEW_CONSOLE, // Run without opening a console window
-			NULL,			  // Use parent's environment
-			NULL,			  // Use parent's starting directory
-			&si,			  // Pointer to STARTUPINFO
-			&pi				  // Pointer to PROCESS_INFORMATION
+			NULL,				// Use parent's environment
+			NULL,				// Use parent's starting directory
+			&si,				// Pointer to STARTUPINFO
+			&pi					// Pointer to PROCESS_INFORMATION
 			))
 	{
 		// Close process and thread handles
@@ -483,18 +483,22 @@ void createProcess(const std::string &path)
 	else
 	{
 		printf("%sFailed to start updater!\n", RED, WHITE);
-		if(GetLastError()==740)
+		if (GetLastError() == 740)
 		{
-			printf("%sPlease try run this command with administrator privileges%s\n",RED,WHITE);
-		}else
+			printf("%sPlease try run this command with administrator privileges%s\n", RED, WHITE);
+		}
+		else
 		{
-			printf("%sunkown error occured!%s\n",RED,WHITE);
+			printf("%sunkown error occured!%s\n", RED, WHITE);
 		};
 	}
 }
+#else
+// Linux stuff
 #endif
 void App::update()
 {
+#ifdef WIN32
 	namespace fs = std::filesystem;
 	std::string ccli{getenv("USERPROFILE")};
 	ccli += "\\ccli";
@@ -511,6 +515,8 @@ void App::update()
 		{
 			createProcess(source);
 		};
-		
-	}
+	};
+#else
+	// Linux stuff
+#endif
 };
