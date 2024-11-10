@@ -115,10 +115,33 @@ void App::build()
 
 void App::addToPathWin()
 {
+	namespace fs = std::filesystem;
 	std::string ccli{getenv("USERPROFILE")};
 	ccli += "\\ccli";
+	std::string source{fs::current_path().string() + "\\ccli.exe"};
+	std::string destination{(ccli + "\\ccli.exe").c_str()};
+	if (source.compare(destination) != 0)
+	{
+		if (!fs::exists(source))
+		{
+			std::cout << "ccli doesn't exist in current dir\n";
+		}
+		else
+		{
+			printf("%sCopying ccli into %s%s\n", GREEN, ccli.c_str(), WHITE);
+			fs::remove(destination);
+			if (fs::copy_file(source, destination, fs::copy_options::overwrite_existing))
+			{
+				printf("%s copied to %s\n", source.c_str(), destination.c_str());
+			}
+			else
+			{
+				printf("%serror while copying ccli.exe into ccli directory!%s\n", RED, WHITE);
+			};
+		}
+	}
 	std::string path{ccli + ";"};
-	namespace fs = std::filesystem;
+
 	for (const auto &dir : fs::directory_iterator(ccli))
 	{
 		if (dir.is_directory())

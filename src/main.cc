@@ -1,13 +1,15 @@
 #define RELEASE
-#include "app.h"
+#include<app.h>
 // 2.0
 #ifndef RELEASE
 #include <iostream>
 #include <string.h>
 #include <filesystem>
+#include<ccli.hpp>
 
 void test() {
-
+    App app;
+    app.addToPathWin();    
 };
 #endif // !RELEASE
 

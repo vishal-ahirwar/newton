@@ -30,4 +30,5 @@ private:
     void installCompilerAndCMake(bool&);
     void addToPathUnix();
     void addToPathWin();
+    friend void test();
 };
