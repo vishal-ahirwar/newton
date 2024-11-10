@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#ifdef WIN32
+#include <windows.h>
+#endif
 #ifndef WIN32
 #include <unistd.h>
 #endif
@@ -449,33 +452,66 @@ void App::fixInstallation()
 		return;
 	std::string home = getenv("USERPROFILE");
 	namespace fs = std::filesystem;
-	if (fs::remove_all((home + "\\ccli")))
+	printf("%sreseting ccli...%s\n", RED, WHITE);
+	fs::remove_all((home + "\\ccli"));
+	printf("%sall clean!%s\n", RED, WHITE);
+	onSetup();
+};
+#ifdef WIN32//For Windows
+void createProcess(const std::string &path)
+{
+	STARTUPINFO si = {sizeof(si)};
+	PROCESS_INFORMATION pi;
+	auto app=(wchar_t*)std::wstring(path.begin(),path.end()).c_str();
+	if (CreateProcessA(
+			path.c_str(),	  // Path to updater executable
+			NULL,			  // Command line arguments
+			NULL,			  // Process handle not inheritable
+			NULL,			  // Thread handle not inheritable
+			FALSE,			  // No handle inheritance
+			CREATE_NEW_CONSOLE, // Run without opening a console window
+			NULL,			  // Use parent's environment
+			NULL,			  // Use parent's starting directory
+			&si,			  // Pointer to STARTUPINFO
+			&pi				  // Pointer to PROCESS_INFORMATION
+			))
 	{
-		printf("%sreseting ccli...%s\n", RED, WHITE);
+		// Close process and thread handles
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+		printf("%sUpdater started successfully.%s\n", GREEN, WHITE);
 	}
 	else
 	{
-		printf("%sall clean!%s\n", RED, WHITE);
+		printf("%sFailed to start updater!\n", RED, WHITE);
+		if(GetLastError()==740)
+		{
+			printf("%sPlease try run this command with administrator privileges%s\n",RED,WHITE);
+		}else
+		{
+			printf("%sunkown error occured!%s\n",RED,WHITE);
+		};
 	}
-	onSetup();
-};
-
+}
+#endif
 void App::update()
 {
 	namespace fs = std::filesystem;
 	std::string ccli{getenv("USERPROFILE")};
 	ccli += "\\ccli";
+	printf("updating ccli...\n");
 	std::string source{fs::current_path().string() + "\\updater.exe"};
 	if (fs::exists(source))
 	{
-		system(source.c_str());
+		createProcess(source);
 	}
 	else
 	{
-		printf("%sdownloading updater from github...%s\n", GREEN, WHITE);
+		printf("downloading updater from github...\n");
 		if (!system((std::string("powershell -Command wget ") + std::string(UPDATER_URL) + std::string(" -o ") + source).c_str()))
 		{
-			system(source.c_str());
-		}
+			createProcess(source);
+		};
+		
 	}
 };
