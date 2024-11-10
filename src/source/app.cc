@@ -77,7 +77,8 @@ namespace CLI
         else if (std::string(argv[1]) == std::string("fix"))
         {
             app.fixInstallation();
-        }else if(std::string(argv[1])==std::string("update"))
+        }
+        else if (std::string(argv[1]) == std::string("update"))
         {
             app.update();
         }

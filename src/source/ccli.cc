@@ -463,5 +463,17 @@ void App::fixInstallation()
 
 void App::update()
 {
-	//TODO
+	// TODO
+	std::string home{getenv("USERPROFILE")};
+	home += "\\ccli";
+	printf("%supdating ccli...%s\n", BLUE, WHITE);
+
+	if (!system((std::string("powershell -Command wget ") + std::string(UPDATE_URL) + std::string(" -o ") + home + "\\ccli.exe").c_str()))
+	{
+		printf("%sdone!%s\n", GREEN, WHITE);
+	}
+	else
+	{
+		printf("%sfailed to update!%s\n", RED, WHITE);
+	};
 }

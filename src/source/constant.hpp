@@ -91,4 +91,7 @@ constexpr std::string_view COMPILER_URL{
 
 constexpr std::string_view CMAKE_URL{
     "https://github.com/Kitware/CMake/releases/download/v3.30.5/cmake-3.30.5-windows-x86_64.zip"};
+
+constexpr std::string_view UPDATE_URL{"https://github.com/vishal-ahirwar/ccli/releases/latest/download/ccli.exe"};
+
 #endif
