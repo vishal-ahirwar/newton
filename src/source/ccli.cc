@@ -462,7 +462,6 @@ void createProcess(const std::string &path)
 {
 	STARTUPINFO si = {sizeof(si)};
 	PROCESS_INFORMATION pi;
-	auto app=(wchar_t*)std::wstring(path.begin(),path.end()).c_str();
 	if (CreateProcessA(
 			path.c_str(),	  // Path to updater executable
 			NULL,			  // Command line arguments
