@@ -6,8 +6,8 @@
 #include <filesystem>
 #include <fstream>
 #include <stdio.h>
-#include<string.h>
-#include<iostream>
+#include <string.h>
+#include <iostream>
 #ifndef WIN32
 #include <unistd.h>
 #endif
@@ -16,17 +16,19 @@ void App::setupUnitTestingFramework()
 {
 	std::ofstream file;
 	file.open("CMakeLists.txt", std::ios::app);
-	if (file.is_open()) {
+	if (file.is_open())
+	{
 		file << GTEST_CODE;
 		file.close();
 		printf("%s[Msg] : GTest added for unit testing :)%s\n", GREEN, WHITE);
 	}
-	else {
+	else
+	{
 		printf("%s[error] : Failed to setup unit testing framework gtest :(%s\n", RED, WHITE);
 	}
 }
 
-void App::createNewProject(const char* argv[], int argc)
+void App::createNewProject(const char *argv[], int argc)
 {
 	clock_t start = clock(), end = 0;
 
@@ -43,33 +45,37 @@ void App::createNewProject(const char* argv[], int argc)
 	end = clock();
 
 	printf("%sElapsed Time : %8.2fms\nWith great power comes great responsibility\n%s",
-		YELLOW,
-		difftime(end, start),
-		WHITE);
+		   YELLOW,
+		   difftime(end, start),
+		   WHITE);
 };
 
 void App::compile()
 {
 	printf("%sCompile Process has been started ....\n%s", BLUE, WHITE);
 #ifdef WIN32
-	if (!system("cmake -S . -B build -G \"MinGW Makefiles\" ")) {
+	if (!system("cmake -S . -B build -G \"MinGW Makefiles\" "))
+	{
 		if (!system(
-			"mingw32-make -C build")) // if there is any kind of error then don't clear the terminal
+				"mingw32-make -C build")) // if there is any kind of error then don't clear the terminal
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 		else
 			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
 	}
-	else {
+	else
+	{
 		printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s", RED, WHITE);
 	};
 #else
-	if (!system("cmake -S . -B build")) {
+	if (!system("cmake -S . -B build"))
+	{
 		if (!system("make -C build/")) // if there is any kind of error then don't clear the terminal
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 		else
 			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
 	}
-	else {
+	else
+	{
 		printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s", RED, WHITE);
 	};
 #endif
@@ -92,11 +98,12 @@ void App::run()
 	run += projectName;
 #endif // WIN32
 
-	if (system(run.c_str())) {
+	if (system(run.c_str()))
+	{
 		printf("%s\n[error] Maybe You should Compile First Before run or You have Permission to "
-			"execute program!\n%s",
-			RED,
-			WHITE);
+			   "execute program!\n%s",
+			   RED,
+			   WHITE);
 	};
 }
 
@@ -108,11 +115,11 @@ void App::build()
 
 void App::addToPathWin()
 {
-	std::string ccli{ getenv("USERPROFILE") };
+	std::string ccli{getenv("USERPROFILE")};
 	ccli += "\\ccli";
-	std::string path{ ccli + ";" };
+	std::string path{ccli + ";"};
 	namespace fs = std::filesystem;
-	for (const auto& dir : fs::directory_iterator(ccli))
+	for (const auto &dir : fs::directory_iterator(ccli))
 	{
 		if (dir.is_directory())
 		{
@@ -121,24 +128,28 @@ void App::addToPathWin()
 		}
 	};
 
-	std::string env{ getenv("path") };
+	std::string env{getenv("path")};
 	// Split path by semicolons and check each path individually
 	std::istringstream pathStream(path);
 	std::string singlePath;
 	bool found = true;
 	std::string newPath{};
-	while (std::getline(pathStream, singlePath, ';')) {
-		if (env.find(singlePath) == std::string::npos) {
+	while (std::getline(pathStream, singlePath, ';'))
+	{
+		if (env.find(singlePath) == std::string::npos)
+		{
 			found = false;
 			newPath += singlePath;
 			newPath += ";";
 		}
 	}
 
-	if (found) {
+	if (found)
+	{
 		std::cout << "All paths from ccli are in PATH\n";
 	}
-	else {
+	else
+	{
 		std::cout << "Some paths from ccli are missing in PATH adding these entries into path make sure to restart your shell after that\n";
 		pathStream.clear();
 		pathStream.str(newPath);
@@ -154,34 +165,34 @@ void App::addToPathWin()
 void App::addToPathUnix()
 {
 	printf("%sdon't be so lazy bruh on linux it's too eazy to install stuff ;) download it using "
-		"your terminal  :(%s\n",
-		CYAN,
-		WHITE);
+		   "your terminal  :(%s\n",
+		   CYAN,
+		   WHITE);
 	printf("%sstill adding to system path...%s\n", GREEN, WHITE);
-	//TODO
+	// TODO
 };
 
-void App::installCompilerAndCMake(bool& isInstallationComplete)
+void App::installCompilerAndCMake(bool &isInstallationComplete)
 {
 	namespace fs = std::filesystem;
 	printf("%sThis will install MinGW-14 Compiler and CMake 3.30 from Github,\nAre you sure you "
-		"want to "
-		"continue??[y/n] %s\n",
-		YELLOW,
-		WHITE);
+		   "want to "
+		   "continue??[y/n] %s\n",
+		   YELLOW,
+		   WHITE);
 	std::string input{};
 	std::cin >> input;
-	if (tolower(input[0]) != 'y')return;
+	if (tolower(input[0]) != 'y')
+		return;
 	std::string home = getenv("USERPROFILE");
-	if (!home.c_str())return;
+	if (!home.c_str())
+		return;
 	home += "\\ccli";
 	printf("%sinstalling c/c++ compiler and cmake please wait....%s\n", BLUE, WHITE);
-	system((std::string("powershell -Command wget ") + std::string(COMPILER_URL)
-		+ std::string(" -o ") + home + "/compiler")
-		.c_str());
-	system((std::string("powershell -Command wget ") + std::string(CMAKE_URL)
-		+ std::string(" -o ") + home + "/cmake")
-		.c_str());
+	system((std::string("powershell -Command wget ") + std::string(COMPILER_URL) + std::string(" -o ") + home + "/compiler")
+			   .c_str());
+	system((std::string("powershell -Command wget ") + std::string(CMAKE_URL) + std::string(" -o ") + home + "/cmake")
+			   .c_str());
 	printf("%sunzipping file at %s%s\n", BLUE, home.c_str(), WHITE);
 	system((std::string("tar -xf ") + home + "\\compiler" + " -C " + home).c_str());
 	system((std::string("tar -xf ") + home + "\\cmake" + " -C " + home).c_str());
@@ -195,31 +206,23 @@ void App::installCompilerAndCMake(bool& isInstallationComplete)
 
 void App::setup()
 {
-	printf("%sWould you like to add newton to PATH Variable[Warning : Make sure to run this command "
-		"once!]y/n%s\n", RED, WHITE);
-	std::string input{};
-	std::cin.clear();
-	std::cin >> input;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	if (tolower(input[0]) == 'y')
-	{
 #ifdef WIN32
-		this->onSetup();
-		//TODO add installed software to path
+	this->onSetup();
+	// TODO add installed software to path
 #else
-		addToPathUnix();
+	addToPathUnix();
 #endif
-	}
 };
 
-void App::generateNewtonFile(const std::string& path)
+void App::generateNewtonFile(const std::string &path)
 {
-	std::string newFileName{ path };
+	std::string newFileName{path};
 	newFileName += "/setting.nn";
 	std::ofstream file(newFileName.c_str(), std::ios::out);
-	if (file.is_open()) {
-		time_t now{ time(NULL) };
-		const char* dateTime{ ctime(&now) };
+	if (file.is_open())
+	{
+		time_t now{time(NULL)};
+		const char *dateTime{ctime(&now)};
 
 		file << projectName << "\n";
 		file << "Project created on " << dateTime << "\n";
@@ -227,32 +230,36 @@ void App::generateNewtonFile(const std::string& path)
 		file << "Note: Please don't remove or edit this file!\n";
 		file.close();
 	}
-	else {
+	else
+	{
 		printf("%ssomething went wrong!\n%s", RED, WHITE);
 	}
 }
 
-void App::readNewtonFile(std::string& output)
+void App::readNewtonFile(std::string &output)
 {
 	std::ifstream file("setting.nn");
-	if (file.is_open()) {
+	if (file.is_open())
+	{
 		std::getline(file, output);
 		std::string dateTime{};
 		std::getline(file, dateTime);
 		printf("%s[%s: %s]%s\n\n", YELLOW, output.c_str(), dateTime.c_str(), WHITE);
 		file.close();
 	}
-	else {
+	else
+	{
 		printf("%snewton file setting.nn doesn't exist!\n%s", RED, WHITE);
 	};
 }
 
-void App::createDir(const char* argv)
+void App::createDir(const char *argv)
 {
 	namespace fs = std::filesystem;
 	std::string cmdString{};
 	cmdString += argv;
-	if (fs::create_directory(cmdString.c_str())) {
+	if (fs::create_directory(cmdString.c_str()))
+	{
 		cmdString += "/build";
 		fs::create_directory(cmdString.c_str());
 		auto pos = cmdString.find("/");
@@ -263,34 +270,36 @@ void App::createDir(const char* argv)
 		cmdString.replace(pos + 1, cmdString.length() - pos, "res");
 		fs::create_directory(cmdString.c_str());
 	}
-	else {
+	else
+	{
 		printf("%sfailed to create dir error!%s", RED, WHITE);
 		exit(0);
 	}
 };
 
-void App::generateCppTemplateFile(const char* argv)
+void App::generateCppTemplateFile(const char *argv)
 {
 	std::ofstream file;
 	// const std::string stdStr{argv[2]};
 	projectName = argv;
 	file.open("./" + projectName + "/src/main.cc", std::ios::out);
 
-	if (file.is_open()) {
+	if (file.is_open())
+	{
 		auto pos = MAIN_CODE.find("@");
-		std::string str{ std::string("Hello, ") + projectName
-						+ std::string("\\nhappy coding journey :)\\n") };
+		std::string str{std::string("Hello, ") + projectName + std::string("\\nhappy coding journey :)\\n")};
 		MAIN_CODE.insert(pos + 1, str);
 		file << MAIN_CODE;
 		file.close();
 	};
 }
 
-void App::generateCmakeFile(const char* argv)
+void App::generateCmakeFile(const char *argv)
 {
 	std::ofstream file;
 	file.open("./" + projectName + "/CMakeLists.txt", std::ios::out);
-	if (file.is_open()) {
+	if (file.is_open())
+	{
 		file << CMAKE_CODE << "\n";
 		file << "project(" << argv << ")\n";
 		file << "set(SOURCE ./src/main.cc)#add your additional source file here!\n";
@@ -308,7 +317,8 @@ void App::generateGitIgnoreFile()
 {
 	std::ofstream file;
 	file.open("./" + projectName + "/.gitignore", std::ios::out);
-	if (file.is_open()) {
+	if (file.is_open())
+	{
 		file << GITIGNORE_CODE;
 
 		file.close();
@@ -319,11 +329,12 @@ void App::generateLicenceFile()
 {
 	std::ofstream out;
 	out.open("License.txt", std::ios_base::out);
-	if (!out.is_open()) {
+	if (!out.is_open())
+	{
 		printf("%s[Error]Failed to Generate License.txt, You may need to create License.txt by "
-			"yourself :)%s",
-			RED,
-			WHITE);
+			   "yourself :)%s",
+			   RED,
+			   WHITE);
 		return;
 	};
 	out << LICENSE_TEXT;
@@ -334,17 +345,19 @@ void App::createInstaller()
 {
 	std::ofstream file;
 	file.open("CMakeLists.txt", std::ios::app);
-	if (file.is_open()) {
+	if (file.is_open())
+	{
 		file << CPACK_CODE;
 		file.close();
 		generateLicenceFile();
 		if (system("cd build && cpack"))
 			printf("%s[Msg]CPack added to cmake run 'cpack' command from build directory to build "
-				"a installer :)%s\n",
-				GREEN,
-				WHITE);
+				   "a installer :)%s\n",
+				   GREEN,
+				   WHITE);
 	}
-	else {
+	else
+	{
 		printf("%s[Msg]Something went wrong :(%s\n", RED, WHITE);
 	}
 };
@@ -357,10 +370,11 @@ void App::gTest()
 
 bool App::onSetup()
 {
-	bool isInstallationComplete{ false };
+	bool isInstallationComplete{false};
 	namespace fs = std::filesystem;
 	std::string home = getenv("USERPROFILE");
-	if (!home.c_str())return false;
+	if (!home.c_str())
+		return false;
 	if (!fs::create_directory(home + "\\ccli"))
 	{
 		printf("%sccli dir alread exist%s\n", GREEN, WHITE);
@@ -403,20 +417,22 @@ bool App::onSetup()
 void App::fixInstallation()
 {
 	printf("%sAre you sure you "
-		"want to "
-		"continue??[y/n] %s\n",
-		YELLOW,
-		WHITE);
+		   "want to "
+		   "continue??[y/n] %s\n",
+		   YELLOW,
+		   WHITE);
 	std::string input{};
 	std::cin >> input;
-	if (tolower(input[0]) != 'y')return;
+	if (tolower(input[0]) != 'y')
+		return;
 	std::string home = getenv("USERPROFILE");
 	namespace fs = std::filesystem;
 	if (fs::remove_all((home + "\\ccli")))
 	{
 		printf("%sreseting ccli...%s\n", RED, WHITE);
 	}
-	else {
+	else
+	{
 		printf("%sall clean!%s\n", RED, WHITE);
 	}
 	onSetup();

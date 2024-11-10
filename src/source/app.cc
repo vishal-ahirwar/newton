@@ -79,7 +79,7 @@ namespace CLI
         }
         else
         {
-            printf("%s[Error] Invalid Command !%s\n",RED,WHITE);
+            printf("%s[Error] Invalid Command !%s\n", RED, WHITE);
             printf("Try again with 'newton help' :(\n");
             return 0;
         };

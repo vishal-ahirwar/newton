@@ -1,10 +1,10 @@
 #define RELEASE
 #include "app.h"
-//2.0
+// 2.0
 #ifndef RELEASE
-#include<iostream>
-#include<string.h>
-#include<filesystem>
+#include <iostream>
+#include <string.h>
+#include <filesystem>
 
 void test() {
 
@@ -21,6 +21,6 @@ int main(int argc, char *argv[])
     if (argc < 2)
         return CLI::showHelp();
     argCount = argc;
-    return CLI::createApp((const char **) argv, argc);
+    return CLI::createApp((const char **)argv, argc);
 #endif
 };
