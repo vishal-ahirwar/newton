@@ -1,10 +1,17 @@
 #define RELEASE
 #include "app.h"
 //2.0
-extern int argCount{};
+#ifndef RELEASE
+#include<iostream>
+#include<string.h>
+#include<filesystem>
+
 void test() {
 
 };
+#endif // !RELEASE
+
+extern int argCount{};
 
 int main(int argc, char *argv[])
 {

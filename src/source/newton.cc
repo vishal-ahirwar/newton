@@ -106,16 +106,50 @@ void App::build()
 	this->run();
 }
 
-void App::addToPathWin(const std::string& path)
+void App::addToPathWin()
 {
-	printf("%simplementation is in progress%s\n", YELLOW, WHITE);
-	std::string home = getenv("USERPROFILE");
-	if (!home.c_str())
+	std::string ccli{ getenv("USERPROFILE") };
+	ccli += "\\ccli";
+	std::string path{ ccli + ";" };
+	namespace fs = std::filesystem;
+	for (const auto& dir : fs::directory_iterator(ccli))
 	{
-		std::cout << "HOME is not set!\n";
-		return;
+		if (dir.is_directory())
+		{
+			path += dir.path().string();
+			path += "\\bin;";
+		}
 	};
-	//TODO
+
+	std::string env{ getenv("path") };
+	// Split path by semicolons and check each path individually
+	std::istringstream pathStream(path);
+	std::string singlePath;
+	bool found = true;
+	std::string newPath{};
+	while (std::getline(pathStream, singlePath, ';')) {
+		if (env.find(singlePath) == std::string::npos) {
+			found = false;
+			newPath += singlePath;
+			newPath += ";";
+		}
+	}
+
+	if (found) {
+		std::cout << "All paths from ccli are in PATH\n";
+	}
+	else {
+		std::cout << "Some paths from ccli are missing in PATH adding these entries into path make sure to restart your shell after that\n";
+		pathStream.clear();
+		pathStream.str(newPath);
+		std::string tempStr{};
+		while (std::getline(pathStream, tempStr, ';'))
+		{
+			std::cout << tempStr << "\n";
+		};
+		system(("setx PATH \"%PATH%;" + newPath + "\"").c_str());
+		system("exit");
+	}
 }
 void App::addToPathUnix()
 {
@@ -156,6 +190,7 @@ void App::installCompilerAndCMake(bool& isInstallationComplete)
 	fs::remove((home + "\\cmake"));
 
 	isInstallationComplete = true;
+	addToPathWin();
 };
 
 void App::setup()

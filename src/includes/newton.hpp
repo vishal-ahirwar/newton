@@ -29,5 +29,5 @@ private:
     bool onSetup();
     void installCompilerAndCMake(bool&);
     void addToPathUnix();
-    void addToPathWin(const std::string&);
+    void addToPathWin();
 };
