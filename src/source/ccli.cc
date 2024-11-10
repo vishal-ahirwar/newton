@@ -1,4 +1,4 @@
-#include "newton.hpp"
+#include "ccli.hpp"
 #include "colors.hpp"
 
 #include "constant.hpp"
@@ -40,7 +40,7 @@ void App::createNewProject(const char *argv[], int argc)
 
 	generateCppTemplateFile(argv[2]);
 	generateCmakeFile(argv[2]);
-	generateNewtonFile(projectName);
+	generateccliFile(projectName);
 	generateGitIgnoreFile();
 	end = clock();
 
@@ -84,7 +84,7 @@ void App::compile()
 void App::run()
 {
 	std::string output{};
-	readNewtonFile(output);
+	readccliFile(output);
 	projectName = output;
 
 	std::string run{};
@@ -214,7 +214,7 @@ void App::setup()
 #endif
 };
 
-void App::generateNewtonFile(const std::string &path)
+void App::generateccliFile(const std::string &path)
 {
 	std::string newFileName{path};
 	newFileName += "/setting.nn";
@@ -236,7 +236,7 @@ void App::generateNewtonFile(const std::string &path)
 	}
 }
 
-void App::readNewtonFile(std::string &output)
+void App::readccliFile(std::string &output)
 {
 	std::ifstream file("setting.nn");
 	if (file.is_open())
@@ -249,7 +249,7 @@ void App::readNewtonFile(std::string &output)
 	}
 	else
 	{
-		printf("%snewton file setting.nn doesn't exist!\n%s", RED, WHITE);
+		printf("%sccli file setting.nn doesn't exist!\n%s", RED, WHITE);
 	};
 }
 

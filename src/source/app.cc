@@ -1,7 +1,7 @@
 #include "app.h"
 #include "colors.hpp"
-#include "newton.hpp"
-#include "newtonConfig.h"
+#include "ccli.hpp"
+#include "ccliConfig.h"
 
 #include <string>
 #include <stdio.h>
@@ -17,19 +17,19 @@ namespace CLI
             "a new project every time you want to learn a new concept in C/C++ ;)"
             "%s\n\nversion : %d.%d.%d\nAuthor: %s\n%s\n"
             "%s\n[Usage]: \n"
-            "newton [command] projectname\n"
+            "ccli [command] projectname\n"
             "\n[available commands]%s\n\n"
-            "create- create a new C/C++ project [newton create projectName]\n"
-            "compile- compile the project[cd into project directory [newton compile]]\n"
+            "create- create a new C/C++ project [ccli create projectName]\n"
+            "compile- compile the project[cd into project directory [ccli compile]]\n"
             "run- run the compiled binary make sure to compile the project before running this command\n"
             "help-show the help wizard\n"
             "build - compile and run the project with this single command\n"
             "setup - this command will install a g++ compiler and cmake to your system if not already installed\n"
-            "gtest : to enable unit testing{newton create test --gtest}\n"
+            "gtest : to enable unit testing{ccli create test --gtest}\n"
             "createinstaller : to create packged build of your application\n"
             "fix : to fix the ccli installation\n%s",
-            BLUE, YELLOW, NEWTON_VERSION_MAJOR, NEWTON_VERSION_MINOR, NEWTON_VERSION_PATCH,
-            NEWTON_COMPANY, NEWTON_COPYRIGHT, CYAN, GREEN, WHITE);
+            BLUE, YELLOW, ccli_VERSION_MAJOR, ccli_VERSION_MINOR, ccli_VERSION_PATCH,
+            ccli_COMPANY, ccli_COPYRIGHT, CYAN, GREEN, WHITE);
         return 0;
     }
     int createApp(const char *argv[], int argc)
@@ -80,7 +80,7 @@ namespace CLI
         else
         {
             printf("%s[Error] Invalid Command !%s\n", RED, WHITE);
-            printf("Try again with 'newton help' :(\n");
+            printf("Try again with 'ccli help' :(\n");
             return 0;
         };
         return 0;

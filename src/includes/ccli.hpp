@@ -17,8 +17,8 @@ public:
       void gTest();
       void fixInstallation();
 private:
-      void generateNewtonFile(const std::string &);
-      void readNewtonFile(std::string &);
+      void generateccliFile(const std::string &);
+      void readccliFile(std::string &);
       void createDir(const char *);
       void generateCppTemplateFile(const char *);
       void generateCmakeFile(const char *);
