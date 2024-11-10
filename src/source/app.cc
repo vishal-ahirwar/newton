@@ -27,6 +27,7 @@ namespace CLI
             "setup - this command will install a g++ compiler and cmake to your system if not already installed\n"
             "gtest : to enable unit testing{ccli create test --gtest}\n"
             "createinstaller : to create packged build of your application\n"
+            "update : update the ccli to latest version\n"
             "fix : to fix the ccli installation\n%s",
             BLUE, YELLOW, ccli_VERSION_MAJOR, ccli_VERSION_MINOR, ccli_VERSION_PATCH,
             ccli_COMPANY, ccli_COPYRIGHT, CYAN, GREEN, WHITE);
@@ -76,6 +77,9 @@ namespace CLI
         else if (std::string(argv[1]) == std::string("fix"))
         {
             app.fixInstallation();
+        }else if(std::string(argv[1])==std::string("update"))
+        {
+            app.update();
         }
         else
         {

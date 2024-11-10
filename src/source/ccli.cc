@@ -460,3 +460,8 @@ void App::fixInstallation()
 	}
 	onSetup();
 };
+
+void App::update()
+{
+	//TODO
+}

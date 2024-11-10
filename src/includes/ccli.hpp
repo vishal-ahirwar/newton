@@ -16,6 +16,7 @@ public:
       void createInstaller();
       void gTest();
       void fixInstallation();
+      void update();
 private:
       void generateccliFile(const std::string &);
       void readccliFile(std::string &);
