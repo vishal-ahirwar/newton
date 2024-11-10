@@ -231,9 +231,8 @@ void App::setup()
 {
 #ifdef WIN32
 	this->onSetup();
-	// TODO add installed software to path
 #else
-	addToPathUnix();
+	this->addToPathUnix();
 #endif
 };
 
@@ -463,17 +462,20 @@ void App::fixInstallation()
 
 void App::update()
 {
-	// TODO
-	std::string home{getenv("USERPROFILE")};
-	home += "\\ccli";
-	printf("%supdating ccli...%s\n", BLUE, WHITE);
-
-	if (!system((std::string("powershell -Command wget ") + std::string(UPDATE_URL) + std::string(" -o ") + home + "\\ccli.exe").c_str()))
+	namespace fs = std::filesystem;
+	std::string ccli{getenv("USERPROFILE")};
+	ccli += "\\ccli";
+	std::string source{fs::current_path().string() + "\\updater.exe"};
+	if (fs::exists(source))
 	{
-		printf("%sdone!%s\n", GREEN, WHITE);
+		system(source.c_str());
 	}
 	else
 	{
-		printf("%sfailed to update!%s\n", RED, WHITE);
-	};
-}
+		printf("%sdownloading updater from github...%s\n", GREEN, WHITE);
+		if (!system((std::string("powershell -Command wget ") + std::string(UPDATER_URL) + std::string(" -o ") + source).c_str()))
+		{
+			system(source.c_str());
+		}
+	}
+};

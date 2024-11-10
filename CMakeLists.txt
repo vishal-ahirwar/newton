@@ -14,10 +14,12 @@ add_executable(${PROJECT_NAME}
     src/source/app.cc
     src/source/ccli.cc)
 
+add_executable(updater updater/main.cc)
+
 target_include_directories(${PROJECT_NAME} PUBLIC 
     src/includes
     ${PROJECT_BINARY_DIR})
-
+target_include_directories(updater PUBLIC src/includes ${PROJECT_BINARY_DIR})
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
 include(InstallRequiredSystemLibraries)
