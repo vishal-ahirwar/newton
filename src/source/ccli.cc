@@ -14,7 +14,7 @@
 #ifndef WIN32
 #include <unistd.h>
 #endif
-
+#include <downloader.h>
 void App::setupUnitTestingFramework()
 {
 	std::ofstream file;
@@ -210,21 +210,20 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	std::cin >> input;
 	if (tolower(input[0]) != 'y')
 		return;
-	std::string home = getenv("USERPROFILE");
+	std::string home=getenv("USERPROFILE");
 	if (!home.c_str())
 		return;
 	home += "\\ccli";
 	printf("%sinstalling c/c++ compiler and cmake please wait....%s\n", BLUE, WHITE);
-	system((std::string("powershell -Command wget ") + std::string(COMPILER_URL) + std::string(" -o ") + home + "/compiler")
-			   .c_str());
-	system((std::string("powershell -Command wget ") + std::string(CMAKE_URL) + std::string(" -o ") + home + "/cmake")
-			   .c_str());
+	// TODO
+	Downloader::download(std::string(COMPILER_URL), home + "\\compiler.zip");
+	Downloader::download(std::string(CMAKE_URL), home + "\\cmake.zip");
 	printf("%sunzipping file at %s%s\n", BLUE, home.c_str(), WHITE);
-	system((std::string("tar -xf ") + home + "\\compiler" + " -C " + home).c_str());
-	system((std::string("tar -xf ") + home + "\\cmake" + " -C " + home).c_str());
+	system((std::string("tar -xf ") + home + "\\compiler.zip" + " -C " + home).c_str());
+	system((std::string("tar -xf ") + home + "\\cmake.zip" + " -C " + home).c_str());
 	printf("%sremoving downloaded archives...%s\n", RED, WHITE);
-	fs::remove((home + "\\compiler"));
-	fs::remove((home + "\\cmake"));
+	fs::remove((home + "\\compiler.zip"));
+	fs::remove((home + "\\cmake.zip"));
 
 	isInstallationComplete = true;
 	addToPathWin();
@@ -498,25 +497,19 @@ void createProcess(const std::string &path)
 #endif
 void App::update()
 {
-#ifdef WIN32
 	namespace fs = std::filesystem;
 	std::string ccli{getenv("USERPROFILE")};
 	ccli += "\\ccli";
 	printf("updating ccli...\n");
-	std::string source{fs::current_path().string() + "\\updater.exe"};
+	std::string source{ccli + "\\updater.exe"};
+	std::cout << source << "\n";
 	if (fs::exists(source))
 	{
 		createProcess(source);
 	}
 	else
 	{
-		printf("downloading updater from github...\n");
-		if (!system((std::string("powershell -Command wget ") + std::string(UPDATER_URL) + std::string(" -o ") + source).c_str()))
-		{
-			createProcess(source);
-		};
+		Downloader::download(std::string(UPDATER_URL), source);
+		createProcess(source);
 	};
-#else
-	// Linux stuff
-#endif
 };
