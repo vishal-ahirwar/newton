@@ -186,7 +186,6 @@ void App::addToPathWin()
 			std::cout << tempStr << "\n";
 		};
 		system(("setx PATH \"%PATH%;" + newPath + "\"").c_str());
-		system("exit");
 	}
 }
 void App::addToPathUnix()

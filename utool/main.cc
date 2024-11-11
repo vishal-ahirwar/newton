@@ -4,8 +4,7 @@
 constexpr std::string_view UPDATE_URL{"https://github.com/vishal-ahirwar/ccli/releases/latest/download/ccli.exe"};
 int main()
 {
-    std::string home{"\""};
-    home += {getenv("USERPROFILE")};
+    std::string home{getenv("USERPROFILE")};
     home += "\\ccli";
     printf("updating ccli...\n");
     Downloader::download(std::string(UPDATE_URL), home + "\\ccli.exe");
