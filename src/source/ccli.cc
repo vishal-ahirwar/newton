@@ -15,6 +15,7 @@
 #include <unistd.h>
 #endif
 #include <downloader.h>
+
 void App::setupUnitTestingFramework()
 {
 	std::ofstream file;
@@ -219,8 +220,8 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	Downloader::download(std::string(COMPILER_URL), home + "\\compiler.zip");
 	Downloader::download(std::string(CMAKE_URL), home + "\\cmake.zip");
 	printf("%sunzipping file at %s%s\n", BLUE, home.c_str(), WHITE);
-	system((std::string("tar -xf ") + home + "\\compiler.zip" + " -C " + home).c_str());
-	system((std::string("tar -xf ") + home + "\\cmake.zip" + " -C " + home).c_str());
+	if(system((std::string("tar -xf ") + "\""+home + "\\compiler.zip\"" + " -C " +"\""+ home+"\"").c_str()))return;
+	if(system((std::string("tar -xf ") + "\""+home + "\\cmake.zip\"" + " -C " +"\""+ home+"\"").c_str()))return;
 	printf("%sremoving downloaded archives...%s\n", RED, WHITE);
 	fs::remove((home + "\\compiler.zip"));
 	fs::remove((home + "\\cmake.zip"));
@@ -501,7 +502,7 @@ void App::update()
 	std::string ccli{getenv("USERPROFILE")};
 	ccli += "\\ccli";
 	printf("updating ccli...\n");
-	std::string source{ccli + "\\updater.exe"};
+	std::string source{ccli + "\\utool.exe"};
 	std::cout << source << "\n";
 	if (fs::exists(source))
 	{

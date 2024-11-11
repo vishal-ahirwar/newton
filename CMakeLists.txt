@@ -20,10 +20,10 @@ add_executable(${PROJECT_NAME}
     src/source/ccli.cc
     downloader/downloader.cc)
 
-add_executable(updater updater/main.cc downloader/downloader.cc)
+add_executable(utool utool/main.cc downloader/downloader.cc)
 
 target_include_directories(${PROJECT_NAME} PUBLIC src/includes downloader ${PROJECT_BINARY_DIR})
-target_include_directories(updater PUBLIC src/includes downloader ${PROJECT_BINARY_DIR})
+target_include_directories(utool PUBLIC src/includes downloader ${PROJECT_BINARY_DIR})
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
@@ -41,4 +41,4 @@ FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
 FetchContent_MakeAvailable(cpr)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE cpr::cpr)
-target_link_libraries(updater PRIVATE cpr::cpr)
+target_link_libraries(utool PRIVATE cpr::cpr)
