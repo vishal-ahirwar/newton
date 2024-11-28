@@ -456,9 +456,10 @@ void App::fixInstallation()
 	printf("%sall clean!%s\n", RED, WHITE);
 	onSetup();
 };
-#ifdef WIN32 // For Windows
+
 void createProcess(const std::string &path)
 {
+	#ifdef WIN32
 	STARTUPINFO si = {sizeof(si)};
 	PROCESS_INFORMATION pi;
 	if (CreateProcessA(
@@ -491,10 +492,11 @@ void createProcess(const std::string &path)
 			printf("%sunkown error occured!%s\n", RED, WHITE);
 		};
 	}
+	#else
+	printf("%sImpementation is still in development for linux%s\n",BLUE,WHITE);
+	#endif
 }
-#else
-// Linux stuff
-#endif
+
 void App::update()
 {
 	namespace fs = std::filesystem;
