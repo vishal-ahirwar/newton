@@ -5,7 +5,7 @@
 class App
 {
 private:
-    std::string projectName;
+    std::string projectName{};
 
 public:
       void createNewProject(const char *argv[],int);

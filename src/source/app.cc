@@ -5,7 +5,7 @@
 
 #include <string>
 #include <stdio.h>
-
+#include<iostream>
 extern int argCount;
 namespace CLI
 {
@@ -64,7 +64,14 @@ namespace CLI
         }
         else if (std::string(argv[1]) == std::string("setup"))
         {
-            app.setup();
+            try
+            {
+                app.setup();
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << e.what() << '\n';
+            }
         }
         else if (std::string(argv[1]) == std::string("createinstaller"))
         {

@@ -15,7 +15,7 @@ echo -e "${GREEN}[ccli]: Building the project...${NC}"
 cmake --build build
 echo ""
 
-# Install
-echo -e "${GREEN}[ccli]: Installing ccli...${NC}"
-sudo cmake --build build --target install
-echo ""
+# # Install
+# echo -e "${GREEN}[ccli]: Installing ccli...${NC}"
+# sudo cmake --build build --target install
+# echo ""

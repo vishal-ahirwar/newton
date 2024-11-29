@@ -83,7 +83,7 @@ target_link_libraries(
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})
 )"};
-
+#ifdef WIN32
 constexpr std::string_view COMPILER_URL{
     "https://github.com/brechtsanders/winlibs_mingw/releases/download/"
     "14.2.0posix-19.1.1-12.0.0-ucrt-r2/"
@@ -95,5 +95,10 @@ constexpr std::string_view CMAKE_URL{
 constexpr std::string_view UPDATER_URL{
     "https://github.com/vishal-ahirwar/ccli/releases/latest/download/utool.exe"
 };
+#else
 
+constexpr std::string_view UPDATER_URL{
+    "https://github.com/vishal-ahirwar/ccli/releases/latest/download/utool"
+};
+#endif
 #endif

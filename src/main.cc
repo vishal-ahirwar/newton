@@ -9,7 +9,8 @@
 
 void test() {
     App app;
-    app.addToPathWin();    
+    bool is;
+    app.onSetup();
 };
 #endif // !RELEASE
 

@@ -16,6 +16,12 @@
 #endif
 #include <downloader.h>
 
+#ifdef WIN32
+#define USERNAME "USERPROFILE"
+#else
+#define USERNAME "USER"
+#endif
+
 void App::setupUnitTestingFramework()
 {
 	std::ofstream file;
@@ -119,8 +125,9 @@ void App::build()
 
 void App::addToPathWin()
 {
+#ifdef WIN32
 	namespace fs = std::filesystem;
-	std::string ccli{getenv("USERPROFILE")};
+	std::string ccli{getenv(USERNAME)};
 	ccli += "\\ccli";
 	std::string source{fs::current_path().string() + "\\ccli.exe"};
 	std::string destination{(ccli + "\\ccli.exe").c_str()};
@@ -187,19 +194,84 @@ void App::addToPathWin()
 		};
 		system(("setx PATH \"%PATH%;" + newPath + "\"").c_str());
 	}
+#endif
 }
 void App::addToPathUnix()
 {
-	printf("%sdon't be so lazy bruh on linux it's too eazy to install stuff ;) download it using "
-		   "your terminal  :(%s\n",
-		   CYAN,
-		   WHITE);
-	printf("%sstill adding to system path...%s\n", GREEN, WHITE);
-	// TODO
+	namespace fs = std::filesystem;
+	std::string ccli{"/home/"};
+	ccli+={getenv(USERNAME)};
+	ccli += "/ccli";
+	std::string source{fs::current_path().string() + "/ccli"};
+	std::string destination{(ccli + "/ccli").c_str()};
+	if (source.compare(destination) != 0)
+	{
+		if (!fs::exists(source))
+		{
+			std::cout << "ccli doesn't exist in current dir\n";
+		}
+		else
+		{
+			printf("%sCopying ccli into %s%s\n", GREEN, destination.c_str(), WHITE);
+			fs::remove(destination);
+			if (fs::copy_file(source, destination, fs::copy_options::overwrite_existing))
+			{
+				printf("%s copied to %s\n", source.c_str(), destination.c_str());
+			}
+			else
+			{
+				printf("%serror while copying ccli.exe into ccli directory!%s\n", RED, WHITE);
+			};
+		}
+	}
+	std::string path{ccli + ";"};
+	std::string env{getenv("PATH")};
+	// Split path by semicolons and check each path individually
+	std::istringstream pathStream(path);
+	std::string singlePath;
+	bool found = true;
+	std::string newPath{};
+	while (std::getline(pathStream, singlePath, ';'))
+	{
+		if (env.find(singlePath) == std::string::npos)
+		{
+			found = false;
+			newPath += singlePath;
+			newPath += ";";
+		}
+	}
+
+	if (found)
+	{
+		std::cout << "All paths from ccli are in PATH\n";
+	}
+	else
+	{
+		std::cout << "Some paths from ccli are missing in PATH adding these entries into path make sure to restart your shell after that\n";
+		pathStream.clear();
+		pathStream.str(newPath);
+		std::string tempStr{};
+		while (std::getline(pathStream, tempStr, ';'))
+		{
+			std::cout << tempStr << "\n";
+		};
+		std::string bashrc=std::string("/home/")+getenv(USERNAME)+"/.bashrc";
+		std::fstream file(bashrc.c_str(),std::ios::app);
+		if(file.is_open())
+		{
+			file<<"export PATH=$PATH:"<<newPath<<"\n";
+			file.close();
+		}else
+		{
+			std::cout<<"failed to open ~/.bashrc file!\n";
+			return;
+		}
+	};
 };
 
 void App::installCompilerAndCMake(bool &isInstallationComplete)
 {
+#ifdef WIN32
 	namespace fs = std::filesystem;
 	printf("%sThis will install MinGW-14 Compiler and CMake 3.30 from Github,\nAre you sure you "
 		   "want to "
@@ -210,7 +282,7 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	std::cin >> input;
 	if (tolower(input[0]) != 'y')
 		return;
-	std::string home=getenv("USERPROFILE");
+	std::string home = getenv(USERNAME);
 	if (!home.c_str())
 		return;
 	home += "\\ccli";
@@ -219,23 +291,70 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	Downloader::download(std::string(COMPILER_URL), home + "\\compiler.zip");
 	Downloader::download(std::string(CMAKE_URL), home + "\\cmake.zip");
 	printf("%sunzipping file at %s%s\n", BLUE, home.c_str(), WHITE);
-	if(system((std::string("tar -xf ") + "\""+home + "\\compiler.zip\"" + " -C " +"\""+ home+"\"").c_str()))return;
-	if(system((std::string("tar -xf ") + "\""+home + "\\cmake.zip\"" + " -C " +"\""+ home+"\"").c_str()))return;
+	if (system((std::string("tar -xf ") + "\"" + home + "\\compiler.zip\"" + " -C " + "\"" + home + "\"").c_str()))
+		return;
+	if (system((std::string("tar -xf ") + "\"" + home + "\\cmake.zip\"" + " -C " + "\"" + home + "\"").c_str()))
+		return;
 	printf("%sremoving downloaded archives...%s\n", RED, WHITE);
 	fs::remove((home + "\\compiler.zip"));
 	fs::remove((home + "\\cmake.zip"));
 
 	isInstallationComplete = true;
 	addToPathWin();
+#else
+#define DISTRO_INFO "/etc/os-release"
+	// Todo :read the file and u will know what ditro user running ;)
+	try
+	{
+		addToPathUnix();
+		std::ifstream file(DISTRO_INFO);
+		if (!file.is_open())
+			return;
+		std::string distro_name{};
+		while (std::getline(file, distro_name))
+		{
+			if (distro_name.find("ID_LIKE") != std::string::npos)
+				break;
+		};
+		if (distro_name.find("ID_LIKE") == std::string::npos)
+		{
+			while (std::getline(file, distro_name))
+			{
+				if (distro_name.find("ID"))
+					break;
+			};
+		}
+		auto index = distro_name.find("=");
+		distro_name = distro_name.substr(index + 2, distro_name.length() - (index + 3));
+		std::cout <<GREEN<<"Development OS Distro/Parent Distro: "<<distro_name << WHITE<<"\n";
+		if (distro_name.find("debian") != std::string::npos || distro_name.find("ubuntu") != std::string::npos)
+		{
+			system("sudo apt install g++ cmake git");
+		}
+		else if (distro_name.find("arch") != std::string::npos)
+		{
+			system("pacman -Sy g++ cmake git");
+		}
+		else if (distro_name.find("fedora") != std::string::npos || distro_name.find("rhel") != std::string::npos)
+		{
+			system("sudo dnf install g++ cmake git");
+		};
+
+		file.close();
+
+		isInstallationComplete = true;
+	}
+	catch (std::exception &e)
+	{
+		printf("%sError : %s\nmake sure you have root privileges  to run this command%s\n", RED, e.what(), WHITE);
+	};
+
+#endif
 };
 
 void App::setup()
 {
-#ifdef WIN32
-	this->onSetup();
-#else
-	this->addToPathUnix();
-#endif
+	onSetup();
 };
 
 void App::generateccliFile(const std::string &path)
@@ -396,14 +515,20 @@ bool App::onSetup()
 {
 	bool isInstallationComplete{false};
 	namespace fs = std::filesystem;
-	std::string home = getenv("USERPROFILE");
+#ifdef WIN32
+	std::string home = getenv(USERNAME);
+#else
+	std::string home{"/home/"};
+	home += getenv(USERNAME);
+#endif
 	if (!home.c_str())
 		return false;
+	std::fstream file;
+#ifdef WIN32
 	if (!fs::create_directory(home + "\\ccli"))
 	{
 		printf("%sccli dir alread exist%s\n", GREEN, WHITE);
 	};
-	std::fstream file;
 	file.open((home + "\\ccli\\.cconfig").c_str(), std::ios::in);
 	if (file.is_open())
 	{
@@ -436,6 +561,51 @@ bool App::onSetup()
 			file.close();
 		}
 	}
+#else
+	if (!fs::create_directory(home + "/ccli"))
+	{
+		printf("%sccli dir alread exist%s\n", GREEN, WHITE);
+	}
+	else
+	{
+		printf("%sCreating ccli dir at %s %s\n", BLUE, home.c_str(), WHITE);
+	};
+
+	file.open((home + "/ccli/.cconfig").c_str(), std::ios::in);
+	if (file.is_open())
+	{
+		file >> isInstallationComplete;
+		file.close();
+		if (isInstallationComplete)
+		{
+			printf("%sCompiler is already installed if you think you messed up with ccli installation please use this command ccli fix %s\n", GREEN, WHITE);
+			return true;
+		}
+	}
+	else
+	{
+		std::cout << "config file doesn't exist, creating one\n";
+	};
+
+	installCompilerAndCMake(isInstallationComplete);
+
+	std::cout << home << "\n";
+	file.open((home + std::string("/ccli/.cconfig")).c_str(), std::ios::out);
+	if (file.is_open())
+	{
+		std::cout << "writing to config file!\n";
+		file << isInstallationComplete;
+		file.close();
+		std::cout << "done!\n";
+		return true;
+	}
+	else
+	{
+		std::cout << "failed to write config file\n";
+		return false;
+	};
+
+#endif
 }
 
 void App::fixInstallation()
@@ -449,17 +619,26 @@ void App::fixInstallation()
 	std::cin >> input;
 	if (tolower(input[0]) != 'y')
 		return;
-	std::string home = getenv("USERPROFILE");
+#ifdef WIN32
+	std::string home = getenv(USERNAME);
+#else
+	std::string home{"/home/"};
+	home += getenv(USERNAME);
+#endif
 	namespace fs = std::filesystem;
 	printf("%sreseting ccli...%s\n", RED, WHITE);
+#ifdef WIN32
 	fs::remove_all((home + "\\ccli"));
+#else
+	fs::remove_all((home + "/ccli"));
+#endif
 	printf("%sall clean!%s\n", RED, WHITE);
-	onSetup();
+	setup();
 };
 
 void createProcess(const std::string &path)
 {
-	#ifdef WIN32
+#ifdef WIN32
 	STARTUPINFO si = {sizeof(si)};
 	PROCESS_INFORMATION pi;
 	if (CreateProcessA(
@@ -492,18 +671,52 @@ void createProcess(const std::string &path)
 			printf("%sunkown error occured!%s\n", RED, WHITE);
 		};
 	}
-	#else
-	printf("%sImpementation is still in development for linux%s\n",BLUE,WHITE);
-	#endif
+#else
+	printf("%sImpementation is still in development for linux%s\n", BLUE, WHITE);
+	// Linux implementation using fork() and exec()
+	pid_t pid = fork(); // Create a new process
+
+	if (pid < 0)
+	{
+		std::cerr << "Fork failed!" << std::endl;
+		return;
+	}
+
+	if (pid == 0)
+	{
+		// This is the child process
+		// Execute the update tool
+		execlp(path.c_str(), path.c_str(), (char *)NULL);
+
+		// If execlp fails, print an error
+		std::cerr << "Failed to start updater!" << std::endl;
+		exit(1);
+	}
+	else
+	{
+		// Parent process - can optionally wait for the child to finish or log the success
+		std::cout << "Updater started successfully in the background." << std::endl;
+	}
+#endif
 }
 
 void App::update()
 {
 	namespace fs = std::filesystem;
-	std::string ccli{getenv("USERPROFILE")};
+#ifdef WIN32
+	std::string ccli = getenv(USERNAME);
+#else
+	std::string ccli{"/home/"};
+	ccli += getenv(USERNAME);
+#endif
+#ifdef WIN32
 	ccli += "\\ccli";
-	printf("updating ccli...\n");
 	std::string source{ccli + "\\utool.exe"};
+#else
+	ccli += "/ccli";
+	std::string source{ccli + "/utool"};
+#endif
+	printf("updating ccli...\n");
 	std::cout << source << "\n";
 	if (fs::exists(source))
 	{
