@@ -32,4 +32,5 @@ private:
     void addToPathUnix();
     void addToPathWin();
     friend void test();
+   
 };

@@ -27,6 +27,8 @@ add_executable(utool utool/main.cc downloader/downloader.cc)
 target_include_directories(${PROJECT_NAME} PUBLIC src/includes downloader ${PROJECT_BINARY_DIR})
 target_include_directories(utool PUBLIC src/includes downloader ${PROJECT_BINARY_DIR})
 
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")

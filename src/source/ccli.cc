@@ -196,6 +196,7 @@ void App::addToPathWin()
 	}
 #endif
 }
+
 void App::addToPathUnix()
 {
 	namespace fs = std::filesystem;
@@ -251,10 +252,6 @@ void App::addToPathUnix()
 		pathStream.clear();
 		pathStream.str(newPath);
 		std::string tempStr{};
-		while (std::getline(pathStream, tempStr, ';'))
-		{
-			std::cout << tempStr << "\n";
-		};
 		std::string bashrc=std::string("/home/")+getenv(USERNAME)+"/.bashrc";
 		std::fstream file(bashrc.c_str(),std::ios::app);
 		if(file.is_open())
@@ -589,7 +586,6 @@ bool App::onSetup()
 
 	installCompilerAndCMake(isInstallationComplete);
 
-	std::cout << home << "\n";
 	file.open((home + std::string("/ccli/.cconfig")).c_str(), std::ios::out);
 	if (file.is_open())
 	{
@@ -686,16 +682,17 @@ void createProcess(const std::string &path)
 	{
 		// This is the child process
 		// Execute the update tool
-		execlp(path.c_str(), path.c_str(), (char *)NULL);
-
-		// If execlp fails, print an error
-		std::cerr << "Failed to start updater!" << std::endl;
-		exit(1);
+		if(execlp(path.c_str(),path.c_str(), (char *)NULL)==-1)
+		{
+			printf("Failed to start update tool\n");
+			return;
+		};
 	}
 	else
 	{
 		// Parent process - can optionally wait for the child to finish or log the success
 		std::cout << "Updater started successfully in the background." << std::endl;
+		return;
 	}
 #endif
 }
@@ -725,6 +722,7 @@ void App::update()
 	else
 	{
 		Downloader::download(std::string(UPDATER_URL), source);
+		system(("chmod +x "+source).c_str());
 		createProcess(source);
 	};
 };

@@ -30,7 +30,6 @@ int main()
     Downloader::download(std::string(UPDATE_URL), home + "/ccli");
 #endif
     printf("%sdone!%s\n", GREEN, WHITE);
-    system("ccli");
     printf("Press any key to quit!\n");
     getchar();
 
