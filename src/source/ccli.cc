@@ -201,7 +201,7 @@ void App::addToPathUnix()
 {
 	namespace fs = std::filesystem;
 	std::string ccli{"/home/"};
-	ccli+={getenv(USERNAME)};
+	ccli += {getenv(USERNAME)};
 	ccli += "/ccli";
 	std::string source{fs::current_path().string() + "/ccli"};
 	std::string destination{(ccli + "/ccli").c_str()};
@@ -252,15 +252,16 @@ void App::addToPathUnix()
 		pathStream.clear();
 		pathStream.str(newPath);
 		std::string tempStr{};
-		std::string bashrc=std::string("/home/")+getenv(USERNAME)+"/.bashrc";
-		std::fstream file(bashrc.c_str(),std::ios::app);
-		if(file.is_open())
+		std::string bashrc = std::string("/home/") + getenv(USERNAME) + "/.bashrc";
+		std::fstream file(bashrc.c_str(), std::ios::app);
+		if (file.is_open())
 		{
-			file<<"export PATH=$PATH:"<<newPath<<"\n";
+			file << "export PATH=$PATH:" << newPath << "\n";
 			file.close();
-		}else
+		}
+		else
 		{
-			std::cout<<"failed to open ~/.bashrc file!\n";
+			std::cout << "failed to open ~/.bashrc file!\n";
 			return;
 		}
 	};
@@ -315,15 +316,21 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 		};
 		if (distro_name.find("ID_LIKE") == std::string::npos)
 		{
+			file.clear();
+			file.seekg(0,file.beg);
 			while (std::getline(file, distro_name))
 			{
-				if (distro_name.find("ID"))
+				if (distro_name.find("ID") != std::string::npos)
+				{
 					break;
+				}
 			};
 		}
 		auto index = distro_name.find("=");
-		distro_name = distro_name.substr(index + 2, distro_name.length() - (index + 3));
-		std::cout <<GREEN<<"Development OS Distro/Parent Distro: "<<distro_name << WHITE<<"\n";
+		if (index == std::string::npos)
+			return;
+		distro_name = distro_name.substr(++index, distro_name.length());
+		std::cout << GREEN << "Development OS Distro/Parent Distro : " << distro_name << WHITE << "\n";
 		if (distro_name.find("debian") != std::string::npos || distro_name.find("ubuntu") != std::string::npos)
 		{
 			system("sudo apt install g++ cmake git");
@@ -682,7 +689,7 @@ void createProcess(const std::string &path)
 	{
 		// This is the child process
 		// Execute the update tool
-		if(execlp(path.c_str(),path.c_str(), (char *)NULL)==-1)
+		if (execlp(path.c_str(), path.c_str(), (char *)NULL) == -1)
 		{
 			printf("Failed to start update tool\n");
 			return;
@@ -722,7 +729,7 @@ void App::update()
 	else
 	{
 		Downloader::download(std::string(UPDATER_URL), source);
-		system(("chmod +x "+source).c_str());
+		system(("chmod +x " + source).c_str());
 		createProcess(source);
 	};
 };
