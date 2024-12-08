@@ -53,7 +53,7 @@ namespace CLI
         }
         else if (std::string(argv[1]) == std::string("compile"))
         {
-            app.compile();
+            app.compile("-DCMAKE_BUILD_TYPE=Release");
         }
         else if (std::string(argv[1]) == std::string("run"))
         {

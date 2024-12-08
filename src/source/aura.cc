@@ -1,6 +1,6 @@
 #include "aura.hpp"
 #include "colors.hpp"
-
+#include <thread>
 #include "constant.hpp"
 #include <ctime>
 #include <filesystem>
@@ -66,11 +66,12 @@ void App::compile(const std::string &additional_cmake_arg)
 	printf("%sCompile Process has been started ....\n%s", BLUE, WHITE);
 	std::string command{"cmake -S . -B build "};
 	command += additional_cmake_arg;
+	std::string cpu_threads{std::to_string(std::thread::hardware_concurrency())};
+	printf("%sThreads in use: %s%s\n",YELLOW,cpu_threads.c_str(),WHITE);
 #ifdef WIN32
 	if (!system((command + " -G \"MinGW Makefiles\" ").c_str()))
 	{
-		if (!system(
-				"mingw32-make -C build")) // if there is any kind of error then don't clear the terminal
+		if (!system(("mingw32-make -C build -j"+cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 		else
 			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
@@ -82,7 +83,7 @@ void App::compile(const std::string &additional_cmake_arg)
 #else
 	if (!system(command.c_str()))
 	{
-		if (!system("make -C build/")) // if there is any kind of error then don't clear the terminal
+		if (!system(("make -C build/ -j"+cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 		else
 			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
