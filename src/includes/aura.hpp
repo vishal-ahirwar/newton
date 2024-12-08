@@ -18,8 +18,8 @@ public:
       void fixInstallation();
       void update();
 private:
-      void generateccliFile(const std::string &);
-      void readccliFile(std::string &);
+      void generateauraFile(const std::string &);
+      void readauraFile(std::string &);
       void createDir(const char *);
       void generateCppTemplateFile(const char *);
       void generateCmakeFile(const char *);

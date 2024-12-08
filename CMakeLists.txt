@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(ccli VERSION 2.1.1)
+project(aura VERSION 2.1.1)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -14,12 +14,12 @@ set(COMPANY "Vishal ahirwar")
 string(TIMESTAMP CURRENT_YEAR "%Y")
 set(COPYRIGHT "Copyright(c) ${CURRENT_YEAR} Vishal Ahirwar and all Contributors. All rights reserved.")
 
-configure_file(ccliConfig.h.in ccliConfig.h)
+configure_file(auraConfig.h.in auraConfig.h)
 
 add_executable(${PROJECT_NAME} 
     src/main.cc
     src/source/app.cc
-    src/source/ccli.cc
+    src/source/aura.cc
     downloader/downloader.cc)
 
 add_executable(utool utool/main.cc downloader/downloader.cc)

@@ -1,0 +1,5 @@
+#define aura_VERSION_MAJOR @aura_VERSION_MAJOR@
+#define aura_VERSION_MINOR @aura_VERSION_MINOR@
+#define aura_VERSION_PATCH @aura_VERSION_PATCH@
+#define aura_COMPANY "@COMPANY@"
+#define aura_COPYRIGHT "@COPYRIGHT@"

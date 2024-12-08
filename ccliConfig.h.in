@@ -1,5 +1,0 @@
-#define ccli_VERSION_MAJOR @ccli_VERSION_MAJOR@
-#define ccli_VERSION_MINOR @ccli_VERSION_MINOR@
-#define ccli_VERSION_PATCH @ccli_VERSION_PATCH@
-#define ccli_COMPANY "@COMPANY@"
-#define ccli_COPYRIGHT "@COPYRIGHT@"

@@ -45,7 +45,7 @@ _deps
 
 constexpr std::string_view CMAKE_CODE{
     R"(
-#Auto Genrated CMake file by ccli CLI
+#Auto Genrated CMake file by aura CLI
 #Copyright 2023 Vishal Ahirwar. #replace with your copyright notice.
 cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 17)
@@ -55,7 +55,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static"))"};
 
 std::string MAIN_CODE{
     R"(
-//Auto Genrated C++ file by ccli CLI
+//Auto Genrated C++ file by aura CLI
 //Copyright 2023 Vishal Ahirwar //replace it with your copyright notice!
 #include<iostream>
 int main(int argc,char*argv[])
@@ -93,12 +93,12 @@ constexpr std::string_view CMAKE_URL{
     "https://github.com/Kitware/CMake/releases/download/v3.30.5/cmake-3.30.5-windows-x86_64.zip"};
 
 constexpr std::string_view UPDATER_URL{
-    "https://github.com/vishal-ahirwar/ccli/releases/latest/download/utool.exe"
+    "https://github.com/vishal-ahirwar/aura/releases/latest/download/utool.exe"
 };
 #else
 
 constexpr std::string_view UPDATER_URL{
-    "https://github.com/vishal-ahirwar/ccli/releases/latest/download/utool"
+    "https://github.com/vishal-ahirwar/aura/releases/latest/download/utool"
 };
 #endif
 #endif

@@ -2,9 +2,9 @@
 #include "colors.hpp"
 #include <downloader.h>
 #ifdef WIN32
-constexpr std::string_view UPDATE_URL{"https://github.com/vishal-ahirwar/ccli/releases/latest/download/ccli.exe"};
+constexpr std::string_view UPDATE_URL{"https://github.com/vishal-ahirwar/aura/releases/latest/download/aura.exe"};
 #else
-constexpr std::string_view UPDATE_URL{"https://github.com/vishal-ahirwar/ccli/releases/latest/download/ccli"};
+constexpr std::string_view UPDATE_URL{"https://github.com/vishal-ahirwar/aura/releases/latest/download/aura"};
 #endif
 
 #ifdef WIN32
@@ -17,17 +17,17 @@ int main()
 {
 #ifdef WIN32
     std::string home = getenv(USERNAME);
-    home += "\\ccli";
+    home += "\\aura";
 #else
     std::string home{"/home/"};
     home += getenv(USERNAME);
-    home+="/ccli";
+    home+="/aura";
 #endif
-    printf("updating ccli...\n");
+    printf("updating aura...\n");
 #ifdef WIN32
-    Downloader::download(std::string(UPDATE_URL), home + "\\ccli.exe");
+    Downloader::download(std::string(UPDATE_URL), home + "\\aura.exe");
 #else
-    Downloader::download(std::string(UPDATE_URL), home + "/ccli");
+    Downloader::download(std::string(UPDATE_URL), home + "/aura");
 #endif
     printf("%sdone!%s\n", GREEN, WHITE);
     printf("Press any key to quit!\n");

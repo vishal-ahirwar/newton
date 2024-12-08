@@ -1,4 +1,4 @@
-#include "ccli.hpp"
+#include "aura.hpp"
 #include "colors.hpp"
 
 #include "constant.hpp"
@@ -50,7 +50,7 @@ void App::createNewProject(const char *argv[], int argc)
 
 	generateCppTemplateFile(argv[2]);
 	generateCmakeFile(argv[2]);
-	generateccliFile(projectName);
+	generateauraFile(projectName);
 	generateGitIgnoreFile();
 	end = clock();
 
@@ -94,7 +94,7 @@ void App::compile()
 void App::run()
 {
 	std::string output{};
-	readccliFile(output);
+	readauraFile(output);
 	projectName = output;
 
 	std::string run{};
@@ -127,19 +127,19 @@ void App::addToPathWin()
 {
 #ifdef WIN32
 	namespace fs = std::filesystem;
-	std::string ccli{getenv(USERNAME)};
-	ccli += "\\ccli";
-	std::string source{fs::current_path().string() + "\\ccli.exe"};
-	std::string destination{(ccli + "\\ccli.exe").c_str()};
+	std::string aura{getenv(USERNAME)};
+	aura += "\\aura";
+	std::string source{fs::current_path().string() + "\\aura.exe"};
+	std::string destination{(aura + "\\aura.exe").c_str()};
 	if (source.compare(destination) != 0)
 	{
 		if (!fs::exists(source))
 		{
-			std::cout << "ccli doesn't exist in current dir\n";
+			std::cout << "aura doesn't exist in current dir\n";
 		}
 		else
 		{
-			printf("%sCopying ccli into %s%s\n", GREEN, ccli.c_str(), WHITE);
+			printf("%sCopying aura into %s%s\n", GREEN, aura.c_str(), WHITE);
 			fs::remove(destination);
 			if (fs::copy_file(source, destination, fs::copy_options::overwrite_existing))
 			{
@@ -147,13 +147,13 @@ void App::addToPathWin()
 			}
 			else
 			{
-				printf("%serror while copying ccli.exe into ccli directory!%s\n", RED, WHITE);
+				printf("%serror while copying aura.exe into aura directory!%s\n", RED, WHITE);
 			};
 		}
 	}
-	std::string path{ccli + ";"};
+	std::string path{aura + ";"};
 
-	for (const auto &dir : fs::directory_iterator(ccli))
+	for (const auto &dir : fs::directory_iterator(aura))
 	{
 		if (dir.is_directory())
 		{
@@ -180,11 +180,11 @@ void App::addToPathWin()
 
 	if (found)
 	{
-		std::cout << "All paths from ccli are in PATH\n";
+		std::cout << "All paths from aura are in PATH\n";
 	}
 	else
 	{
-		std::cout << "Some paths from ccli are missing in PATH adding these entries into path make sure to restart your shell after that\n";
+		std::cout << "Some paths from aura are missing in PATH adding these entries into path make sure to restart your shell after that\n";
 		pathStream.clear();
 		pathStream.str(newPath);
 		std::string tempStr{};
@@ -200,20 +200,20 @@ void App::addToPathWin()
 void App::addToPathUnix()
 {
 	namespace fs = std::filesystem;
-	std::string ccli{"/home/"};
-	ccli += {getenv(USERNAME)};
-	ccli += "/ccli";
-	std::string source{fs::current_path().string() + "/ccli"};
-	std::string destination{(ccli + "/ccli").c_str()};
+	std::string aura{"/home/"};
+	aura += {getenv(USERNAME)};
+	aura += "/aura";
+	std::string source{fs::current_path().string() + "/aura"};
+	std::string destination{(aura + "/aura").c_str()};
 	if (source.compare(destination) != 0)
 	{
 		if (!fs::exists(source))
 		{
-			std::cout << "ccli doesn't exist in current dir\n";
+			std::cout << "aura doesn't exist in current dir\n";
 		}
 		else
 		{
-			printf("%sCopying ccli into %s%s\n", GREEN, destination.c_str(), WHITE);
+			printf("%sCopying aura into %s%s\n", GREEN, destination.c_str(), WHITE);
 			fs::remove(destination);
 			if (fs::copy_file(source, destination, fs::copy_options::overwrite_existing))
 			{
@@ -221,11 +221,11 @@ void App::addToPathUnix()
 			}
 			else
 			{
-				printf("%serror while copying ccli.exe into ccli directory!%s\n", RED, WHITE);
+				printf("%serror while copying aura.exe into aura directory!%s\n", RED, WHITE);
 			};
 		}
 	}
-	std::string path{ccli + ";"};
+	std::string path{aura + ";"};
 	std::string env{getenv("PATH")};
 	// Split path by semicolons and check each path individually
 	std::istringstream pathStream(path);
@@ -244,11 +244,11 @@ void App::addToPathUnix()
 
 	if (found)
 	{
-		std::cout << "All paths from ccli are in PATH\n";
+		std::cout << "All paths from aura are in PATH\n";
 	}
 	else
 	{
-		std::cout << "Some paths from ccli are missing in PATH adding these entries into path make sure to restart your shell after that\n";
+		std::cout << "Some paths from aura are missing in PATH adding these entries into path make sure to restart your shell after that\n";
 		pathStream.clear();
 		pathStream.str(newPath);
 		std::string tempStr{};
@@ -283,7 +283,7 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	std::string home = getenv(USERNAME);
 	if (!home.c_str())
 		return;
-	home += "\\ccli";
+	home += "\\aura";
 	printf("%sinstalling c/c++ compiler and cmake please wait....%s\n", BLUE, WHITE);
 	// TODO
 	Downloader::download(std::string(COMPILER_URL), home + "\\compiler.zip");
@@ -361,7 +361,7 @@ void App::setup()
 	onSetup();
 };
 
-void App::generateccliFile(const std::string &path)
+void App::generateauraFile(const std::string &path)
 {
 	std::string newFileName{path};
 	newFileName += "/setting.nn";
@@ -383,7 +383,7 @@ void App::generateccliFile(const std::string &path)
 	}
 }
 
-void App::readccliFile(std::string &output)
+void App::readauraFile(std::string &output)
 {
 	std::ifstream file("setting.nn");
 	if (file.is_open())
@@ -396,7 +396,7 @@ void App::readccliFile(std::string &output)
 	}
 	else
 	{
-		printf("%sccli file setting.nn doesn't exist!\n%s", RED, WHITE);
+		printf("%saura file setting.nn doesn't exist!\n%s", RED, WHITE);
 	};
 }
 
@@ -529,24 +529,24 @@ bool App::onSetup()
 		return false;
 	std::fstream file;
 #ifdef WIN32
-	if (!fs::create_directory(home + "\\ccli"))
+	if (!fs::create_directory(home + "\\aura"))
 	{
-		printf("%sccli dir alread exist%s\n", GREEN, WHITE);
+		printf("%saura dir alread exist%s\n", GREEN, WHITE);
 	};
-	file.open((home + "\\ccli\\.cconfig").c_str(), std::ios::in);
+	file.open((home + "\\aura\\.cconfig").c_str(), std::ios::in);
 	if (file.is_open())
 	{
 		file >> isInstallationComplete;
 		file.close();
 		if (isInstallationComplete)
 		{
-			printf("%sCompiler is already installed if you think you messed up with ccli installation please use this command ccli fix %s\n", GREEN, WHITE);
+			printf("%sCompiler is already installed if you think you messed up with aura installation please use this command aura fix %s\n", GREEN, WHITE);
 			return true;
 		}
 	}
 	else
 	{
-		file.open((home + "\\ccli\\.cconfig").c_str(), std::ios::out);
+		file.open((home + "\\aura\\.cconfig").c_str(), std::ios::out);
 		if (file.is_open())
 		{
 			installCompilerAndCMake(isInstallationComplete);
@@ -558,7 +558,7 @@ bool App::onSetup()
 	if (!isInstallationComplete)
 	{
 		installCompilerAndCMake(isInstallationComplete);
-		file.open((home + "\\ccli\\.cconfig").c_str(), std::ios::out);
+		file.open((home + "\\aura\\.cconfig").c_str(), std::ios::out);
 		if (file.is_open())
 		{
 			file << isInstallationComplete;
@@ -566,23 +566,23 @@ bool App::onSetup()
 		}
 	}
 #else
-	if (!fs::create_directory(home + "/ccli"))
+	if (!fs::create_directory(home + "/aura"))
 	{
-		printf("%sccli dir alread exist%s\n", GREEN, WHITE);
+		printf("%saura dir alread exist%s\n", GREEN, WHITE);
 	}
 	else
 	{
-		printf("%sCreating ccli dir at %s %s\n", BLUE, home.c_str(), WHITE);
+		printf("%sCreating aura dir at %s %s\n", BLUE, home.c_str(), WHITE);
 	};
 
-	file.open((home + "/ccli/.cconfig").c_str(), std::ios::in);
+	file.open((home + "/aura/.cconfig").c_str(), std::ios::in);
 	if (file.is_open())
 	{
 		file >> isInstallationComplete;
 		file.close();
 		if (isInstallationComplete)
 		{
-			printf("%sCompiler is already installed if you think you messed up with ccli installation please use this command ccli fix %s\n", GREEN, WHITE);
+			printf("%sCompiler is already installed if you think you messed up with aura installation please use this command aura fix %s\n", GREEN, WHITE);
 			return true;
 		}
 	}
@@ -593,7 +593,7 @@ bool App::onSetup()
 
 	installCompilerAndCMake(isInstallationComplete);
 
-	file.open((home + std::string("/ccli/.cconfig")).c_str(), std::ios::out);
+	file.open((home + std::string("/aura/.cconfig")).c_str(), std::ios::out);
 	if (file.is_open())
 	{
 		std::cout << "writing to config file!\n";
@@ -629,11 +629,11 @@ void App::fixInstallation()
 	home += getenv(USERNAME);
 #endif
 	namespace fs = std::filesystem;
-	printf("%sreseting ccli...%s\n", RED, WHITE);
+	printf("%sreseting aura...%s\n", RED, WHITE);
 #ifdef WIN32
-	fs::remove_all((home + "\\ccli"));
+	fs::remove_all((home + "\\aura"));
 #else
-	fs::remove_all((home + "/ccli"));
+	fs::remove_all((home + "/aura"));
 #endif
 	printf("%sall clean!%s\n", RED, WHITE);
 	setup();
@@ -708,19 +708,19 @@ void App::update()
 {
 	namespace fs = std::filesystem;
 #ifdef WIN32
-	std::string ccli = getenv(USERNAME);
+	std::string aura = getenv(USERNAME);
 #else
-	std::string ccli{"/home/"};
-	ccli += getenv(USERNAME);
+	std::string aura{"/home/"};
+	aura += getenv(USERNAME);
 #endif
 #ifdef WIN32
-	ccli += "\\ccli";
-	std::string source{ccli + "\\utool.exe"};
+	aura += "\\aura";
+	std::string source{aura + "\\utool.exe"};
 #else
-	ccli += "/ccli";
-	std::string source{ccli + "/utool"};
+	aura += "/aura";
+	std::string source{aura + "/utool"};
 #endif
-	printf("updating ccli...\n");
+	printf("updating aura...\n");
 	std::cout << source << "\n";
 	if (fs::exists(source))
 	{
