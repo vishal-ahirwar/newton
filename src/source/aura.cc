@@ -60,11 +60,14 @@ void App::createNewProject(const char *argv[], int argc)
 		   WHITE);
 };
 
-void App::compile()
+// TODO : add compile option
+void App::compile(const std::string &additional_cmake_arg)
 {
 	printf("%sCompile Process has been started ....\n%s", BLUE, WHITE);
+	std::string command{"cmake -S . -B build "};
+	command += additional_cmake_arg;
 #ifdef WIN32
-	if (!system("cmake -S . -B build -G \"MinGW Makefiles\" "))
+	if (!system((command + " -G \"MinGW Makefiles\" ").c_str()))
 	{
 		if (!system(
 				"mingw32-make -C build")) // if there is any kind of error then don't clear the terminal
@@ -77,7 +80,7 @@ void App::compile()
 		printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s", RED, WHITE);
 	};
 #else
-	if (!system("cmake -S . -B build"))
+	if (!system(command.c_str()))
 	{
 		if (!system("make -C build/")) // if there is any kind of error then don't clear the terminal
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
@@ -736,5 +739,6 @@ void App::update()
 void App::debug()
 {
 	readauraFile(projectName);
+	compile("-DCMAKE_BUILD_TYPE=Debug");
 	system(("gdb ./build/" + projectName).c_str());
 };

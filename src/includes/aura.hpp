@@ -9,7 +9,7 @@ private:
 
 public:
       void createNewProject(const char *argv[],int);
-      void compile();
+      void compile(const std::string&additional_cmake_arg="");
       void run();
       void build();
       void setup();
