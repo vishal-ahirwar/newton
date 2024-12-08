@@ -28,6 +28,7 @@ namespace CLI
             "gtest : to enable unit testing{aura create test --gtest}\n"
             "createinstaller : to create packged build of your application\n"
             "update : update the aura to latest version\n"
+            "debug : to start GDB debugger\n"
             "fix : to fix the aura installation\n%s",
             BLUE, YELLOW, aura_VERSION_MAJOR, aura_VERSION_MINOR, aura_VERSION_PATCH,
             aura_COMPANY, aura_COPYRIGHT, CYAN, GREEN, WHITE);
@@ -88,6 +89,9 @@ namespace CLI
         else if (std::string(argv[1]) == std::string("update"))
         {
             app.update();
+        }else if(std::string(argv[1]) == std::string("debug"))
+        {
+            app.debug();
         }
         else
         {

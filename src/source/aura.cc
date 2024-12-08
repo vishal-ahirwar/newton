@@ -317,7 +317,7 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 		if (distro_name.find("ID_LIKE") == std::string::npos)
 		{
 			file.clear();
-			file.seekg(0,file.beg);
+			file.seekg(0, file.beg);
 			while (std::getline(file, distro_name))
 			{
 				if (distro_name.find("ID") != std::string::npos)
@@ -732,4 +732,9 @@ void App::update()
 		system(("chmod +x " + source).c_str());
 		createProcess(source);
 	};
+}
+void App::debug()
+{
+	readauraFile(projectName);
+	system(("gdb ./build/" + projectName).c_str());
 };
