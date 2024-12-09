@@ -5,7 +5,7 @@
 
 #include <string>
 #include <stdio.h>
-#include<iostream>
+#include <iostream>
 extern int argCount;
 namespace CLI
 {
@@ -53,7 +53,10 @@ namespace CLI
         }
         else if (std::string(argv[1]) == std::string("compile"))
         {
-            app.compile("-DCMAKE_BUILD_TYPE=Release");
+            if (argc > 2)
+                app.compile("-DCMAKE_BUILD_TYPE=" + std::string(argv[2]));
+            else
+                app.compile();
         }
         else if (std::string(argv[1]) == std::string("run"))
         {
@@ -89,7 +92,8 @@ namespace CLI
         else if (std::string(argv[1]) == std::string("update"))
         {
             app.update();
-        }else if(std::string(argv[1]) == std::string("debug"))
+        }
+        else if (std::string(argv[1]) == std::string("debug"))
         {
             app.debug();
         }

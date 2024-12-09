@@ -63,22 +63,35 @@ void App::createNewProject(const char *argv[], int argc)
 // TODO : add compile option
 void App::compile(const std::string &additional_cmake_arg)
 {
-	printf("%sCompile Process has been started ....\n%s", BLUE, WHITE);
-	std::string command{"cmake -S . -B build -G \"Ninja\" "};
-	command += additional_cmake_arg;
+	namespace fs = std::filesystem;
 	std::string cpu_threads{std::to_string(std::thread::hardware_concurrency())};
 	printf("%sThreads in use: %s%s\n", YELLOW, cpu_threads.c_str(), WHITE);
-	if (!system(command.c_str()))
+	if (!fs::exists(fs::current_path().string() + "/build") || additional_cmake_arg.length() > 5)
 	{
+		// run cmake
+		printf("%sCompile Process has been started ....\n%s", BLUE, WHITE);
+		std::string command{"cmake -S . -B build -G \"Ninja\" "};
+		command += additional_cmake_arg;
+		if (!system(command.c_str()))
+		{
+			if (!system(("ninja -C build -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
+				printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
+			else
+				printf("\n%sBUILD FAILED%s\n", RED, WHITE);
+		}
+		else
+		{
+			printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s", RED, WHITE);
+		};
+	}
+	else
+	{
+		// run ninja
 		if (!system(("ninja -C build -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 		else
 			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
 	}
-	else
-	{
-		printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s", RED, WHITE);
-	};
 };
 
 void App::run()
@@ -726,6 +739,6 @@ void App::update()
 void App::debug()
 {
 	readauraFile(projectName);
-	compile("-DCMAKE_BUILD_TYPE=Debug");
+	compile("Debug");
 	system(("gdb ./build/" + projectName).c_str());
 };
