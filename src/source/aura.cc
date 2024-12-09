@@ -410,13 +410,9 @@ void App::createDir(const char *argv)
 	cmdString += argv;
 	if (fs::create_directory(cmdString.c_str()))
 	{
-		cmdString += "/build";
+		cmdString += "/src";
 		fs::create_directory(cmdString.c_str());
 		auto pos = cmdString.find("/");
-		cmdString.replace(pos + 1, cmdString.length() - pos, "src");
-
-		fs::create_directory(cmdString.c_str());
-		pos = cmdString.find("/");
 		cmdString.replace(pos + 1, cmdString.length() - pos, "res");
 		fs::create_directory(cmdString.c_str());
 	}
