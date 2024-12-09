@@ -735,6 +735,6 @@ void App::update()
 void App::debug()
 {
 	readauraFile(projectName);
-	compile("Debug");
+	compile("-DCMAKE_BUILD_TYPE=Debug");
 	system(("gdb ./build/" + projectName).c_str());
 };
