@@ -64,26 +64,13 @@ void App::createNewProject(const char *argv[], int argc)
 void App::compile(const std::string &additional_cmake_arg)
 {
 	printf("%sCompile Process has been started ....\n%s", BLUE, WHITE);
-	std::string command{"cmake -S . -B build "};
+	std::string command{"cmake -S . -B build -G \"Ninja\" "};
 	command += additional_cmake_arg;
 	std::string cpu_threads{std::to_string(std::thread::hardware_concurrency())};
-	printf("%sThreads in use: %s%s\n",YELLOW,cpu_threads.c_str(),WHITE);
-#ifdef WIN32
-	if (!system((command + " -G \"MinGW Makefiles\" ").c_str()))
-	{
-		if (!system(("mingw32-make -C build -j"+cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
-			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
-		else
-			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
-	}
-	else
-	{
-		printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s", RED, WHITE);
-	};
-#else
+	printf("%sThreads in use: %s%s\n", YELLOW, cpu_threads.c_str(), WHITE);
 	if (!system(command.c_str()))
 	{
-		if (!system(("make -C build/ -j"+cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
+		if (!system(("ninja -C build -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 		else
 			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
@@ -92,7 +79,6 @@ void App::compile(const std::string &additional_cmake_arg)
 	{
 		printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s", RED, WHITE);
 	};
-#endif
 };
 
 void App::run()
@@ -275,7 +261,7 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 {
 #ifdef WIN32
 	namespace fs = std::filesystem;
-	printf("%sThis will install MinGW-14 Compiler and CMake 3.30 from Github,\nAre you sure you "
+	printf("%sThis will install Clang Compiler and CMake 3.30 from Github,\nAre you sure you "
 		   "want to "
 		   "continue??[y/n] %s\n",
 		   YELLOW,
@@ -288,7 +274,7 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	if (!home.c_str())
 		return;
 	home += "\\aura";
-	printf("%sinstalling c/c++ compiler and cmake please wait....%s\n", BLUE, WHITE);
+	printf("%sinstalling C/C++ Clang compiler and cmake please wait....%s\n", BLUE, WHITE);
 	// TODO
 	Downloader::download(std::string(COMPILER_URL), home + "\\compiler.zip");
 	Downloader::download(std::string(CMAKE_URL), home + "\\cmake.zip");
