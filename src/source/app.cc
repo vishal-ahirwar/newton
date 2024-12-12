@@ -20,7 +20,7 @@ namespace CLI
             "aura [command] projectname\n"
             "\n[available commands]%s\n\n"
             "create- create a new C/C++ project [aura create projectName]\n"
-            "compile- compile the project[cd into project directory [aura compile]]\n"
+            "compile- compile the project[cd into project directory [aura compile <additional cmake args>]] ex. aura compile -DCMAKE_BUILD_TYPE=Debug\n"
             "run- run the compiled binary make sure to compile the project before running this command\n"
             "help-show the help wizard\n"
             "build - compile and run the project with this single command\n"
@@ -29,6 +29,7 @@ namespace CLI
             "createinstaller : to create packged build of your application\n"
             "update : update the aura to latest version\n"
             "debug : to start GDB debugger\n"
+            "release: to compile application in release mode or you can do this manually aura compile -DCMAKE_BUILD_TYPE=Release\n"
             "fix : to fix the aura installation\n%s",
             BLUE, YELLOW, aura_VERSION_MAJOR, aura_VERSION_MINOR, aura_VERSION_PATCH,
             aura_COMPANY, aura_COPYRIGHT, CYAN, GREEN, WHITE);
@@ -54,7 +55,7 @@ namespace CLI
         else if (std::string(argv[1]) == std::string("compile"))
         {
             if (argc > 2)
-                app.compile("-DCMAKE_BUILD_TYPE=" + std::string(argv[2]));
+                app.compile(std::string(argv[2]));
             else
                 app.compile();
         }
@@ -96,6 +97,8 @@ namespace CLI
         else if (std::string(argv[1]) == std::string("debug"))
         {
             app.debug();
+        }else if (std::string(argv[1]) == std::string("release")) {
+            app.release();
         }
         else
         {

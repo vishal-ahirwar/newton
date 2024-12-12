@@ -274,7 +274,7 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 {
 #ifdef WIN32
 	namespace fs = std::filesystem;
-	printf("%sThis will install Clang Compiler and CMake 3.30 from Github,\nAre you sure you "
+	printf("%sThis will install C/C++ GCC Toolchain with cmake and ninja from Github,\nAre you sure you "
 		   "want to "
 		   "continue??[y/n] %s\n",
 		   YELLOW,
@@ -287,10 +287,21 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	if (!home.c_str())
 		return;
 	home += "\\aura";
-	printf("%sinstalling C/C++ Clang compiler and cmake please wait....%s\n", BLUE, WHITE);
+	printf("%sinstalling C/C++ GCC Toolchain with cmake and ninja please wait....%s\n", BLUE, WHITE);
 	// TODO
-	Downloader::download(std::string(COMPILER_URL), home + "\\compiler.zip");
-	Downloader::download(std::string(CMAKE_URL), home + "\\cmake.zip");
+	printf("%sInstall winlibs Intel/AMD (0).32-bit and (1).64-bit standalone build 0/1?%s\n", BLUE, WHITE);
+	std::cin >> input;
+	if (input=="0") {
+		Downloader::download(std::string(COMPILER_URL_32BIT), home + "\\compiler.zip");
+		Downloader::download(std::string(CMAKE_URL_32BIT), home + "\\cmake.zip");
+	}else if (input=="1") {
+		Downloader::download(std::string(COMPILER_URL_64BIT), home + "\\compiler.zip");
+		Downloader::download(std::string(CMAKE_URL_64BIT), home + "\\cmake.zip");
+	}else {
+		printf("Invalid install command, try again\n");
+		return;
+	}
+
 	printf("%sunzipping file at %s%s\n", BLUE, home.c_str(), WHITE);
 	if (system((std::string("tar -xf ") + "\"" + home + "\\compiler.zip\"" + " -C " + "\"" + home + "\"").c_str()))
 		return;
@@ -728,13 +739,20 @@ void App::update()
 	else
 	{
 		Downloader::download(std::string(UPDATER_URL), source);
+#ifndef WIN32
 		system(("chmod +x " + source).c_str());
+#endif
 		createProcess(source);
 	};
 }
 void App::debug()
 {
 	readauraFile(projectName);
-	compile("Debug");
+	compile("-DCMAKE_BUILD_TYPE=Debug");
 	system(("gdb ./build/" + projectName).c_str());
+};
+
+void App::release() {
+	readauraFile(projectName);
+	compile("-DCMAKE_BUILD_TYPE=Release");
 };

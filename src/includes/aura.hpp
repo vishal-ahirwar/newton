@@ -18,6 +18,7 @@ public:
       void fixInstallation();
       void update();
       void debug();
+      void release();
 private:
       void generateauraFile(const std::string &);
       void readauraFile(std::string &);
