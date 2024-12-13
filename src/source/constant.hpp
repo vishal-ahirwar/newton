@@ -40,7 +40,7 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
-
+build
 )"};
 
 constexpr std::string_view CMAKE_CODE{
@@ -66,23 +66,31 @@ int main(int argc,char*argv[])
 
 )"};
 
-constexpr std::string_view GTEST_CODE{R"(
-include(FetchContent)
+constexpr std::string_view TEST_CODE{R"(
+Include(FetchContent)
 FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/34ad51b.zip
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.4.0 # or a later release
 )
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-enable_testing()
-target_link_libraries(
-  ${PROJECT_NAME}
-  GTest::gtest_main
-)
-include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME})
+FetchContent_MakeAvailable(Catch2)
+add_executable(tests ./tests/main.cc)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 )"};
+constexpr std::string_view TEST_CXX_CODE{R"(
+#include <catch2/catch_test_macros.hpp>
+
+unsigned int Factorial(unsigned int number)
+{
+    return number <= 1 ? number : Factorial(number - 1) * number;
+}
+
+TEST_CASE("Factorials are computed", "[factorial]")
+{
+    REQUIRE(Factorial(1) == 1);
+    REQUIRE(Factorial(2) == 2);
+    REQUIRE(Factorial(3) == 9);
+})"};
 #ifdef WIN32
 constexpr std::string_view COMPILER_URL_64BIT{
 "https://github.com/brechtsanders/winlibs_mingw/releases/download/14.2.0posix-19.1.1-12.0.0-msvcrt-r2/winlibs-x86_64-posix-seh-gcc-14.2.0-mingw-w64msvcrt-12.0.0-r2.7z"

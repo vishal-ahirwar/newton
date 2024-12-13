@@ -24,17 +24,30 @@
 
 void App::setupUnitTestingFramework()
 {
+	namespace fs = std::filesystem;
+	auto path=fs::current_path().string()+"/tests/";
+	if (fs::exists(path)) {
+		return;
+	};
+	fs::create_directory(path);
+
+	std::fstream testFile(path+"main.cc",std::ios::out);
+	if (testFile.is_open()) {
+		testFile<<TEST_CXX_CODE;
+		testFile.close();
+	};
+
 	std::ofstream file;
 	file.open("CMakeLists.txt", std::ios::app);
 	if (file.is_open())
 	{
-		file << GTEST_CODE;
+		file << TEST_CODE;
 		file.close();
-		printf("%s[Msg] : GTest added for unit testing :)%s\n", GREEN, WHITE);
+		printf("%s[Msg] : catch2 added for unit testing,start adding tests in tests/main.cc then run 'aura utest' to run tests:)%s\n", GREEN, WHITE);
 	}
 	else
 	{
-		printf("%s[error] : Failed to setup unit testing framework gtest :(%s\n", RED, WHITE);
+		printf("%s[error] : Failed to setup unit testing framework catch2 :(%s\n", RED, WHITE);
 	}
 }
 
@@ -519,10 +532,15 @@ void App::createInstaller()
 	}
 };
 
-void App::gTest()
+void App::test()
 {
 	setupUnitTestingFramework();
-	build();
+	compile();
+#ifdef WIN32
+	system(".\\build\\tests.exe");
+#else
+	system("./build/tests");
+#endif
 };
 
 bool App::onSetup()

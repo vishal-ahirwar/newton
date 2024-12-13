@@ -25,7 +25,7 @@ namespace CLI
             "help-show the help wizard\n"
             "build - compile and run the project with this single command\n"
             "setup - this command will install a g++ compiler and cmake to your system if not already installed\n"
-            "gtest : to enable unit testing{aura create test --gtest}\n"
+            "utest : to enable unit testing{aura create test --test}\n"
             "createinstaller : to create packged build of your application\n"
             "update : update the aura to latest version\n"
             "debug : to start GDB debugger\n"
@@ -82,9 +82,9 @@ namespace CLI
         {
             app.createInstaller();
         }
-        else if (std::string(argv[1]) == std::string("gtest"))
+        else if (std::string(argv[1]) == std::string("utest"))
         {
-            app.gTest();
+            app.test();
         }
         else if (std::string(argv[1]) == std::string("fix"))
         {

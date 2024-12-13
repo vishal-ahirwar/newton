@@ -14,7 +14,7 @@ public:
       void build();
       void setup();
       void createInstaller();
-      void gTest();
+      void test();
       void fixInstallation();
       void update();
       void debug();
