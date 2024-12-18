@@ -25,15 +25,17 @@
 void App::setupUnitTestingFramework()
 {
 	namespace fs = std::filesystem;
-	auto path=fs::current_path().string()+"/tests/";
-	if (fs::exists(path)) {
+	auto path = fs::current_path().string() + "/tests/";
+	if (fs::exists(path))
+	{
 		return;
 	};
 	fs::create_directory(path);
 
-	std::fstream testFile(path+"main.cc",std::ios::out);
-	if (testFile.is_open()) {
-		testFile<<TEST_CXX_CODE;
+	std::fstream testFile(path + "main.cc", std::ios::out);
+	if (testFile.is_open())
+	{
+		testFile << TEST_CXX_CODE;
 		testFile.close();
 	};
 
@@ -304,13 +306,18 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	// TODO
 	printf("%sInstall winlibs Intel/AMD (0).32-bit and (1).64-bit standalone build 0/1?%s\n", BLUE, WHITE);
 	std::cin >> input;
-	if (input=="0") {
+	if (input == "0")
+	{
 		Downloader::download(std::string(COMPILER_URL_32BIT), home + "\\compiler.zip");
 		Downloader::download(std::string(CMAKE_URL_32BIT), home + "\\cmake.zip");
-	}else if (input=="1") {
+	}
+	else if (input == "1")
+	{
 		Downloader::download(std::string(COMPILER_URL_64BIT), home + "\\compiler.zip");
 		Downloader::download(std::string(CMAKE_URL_64BIT), home + "\\cmake.zip");
-	}else {
+	}
+	else
+	{
 		printf("Invalid install command, try again\n");
 		return;
 	}
@@ -347,10 +354,8 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 			file.seekg(0, file.beg);
 			while (std::getline(file, distro_name))
 			{
-				if (distro_name.find("ID") != std::string::npos)
-				{
+				if (distro_name.length() > 0 && distro_name.substr(0, 2) == "ID")
 					break;
-				}
 			};
 		}
 		auto index = distro_name.find("=");
@@ -436,7 +441,7 @@ void App::createDir(const char *argv)
 	{
 		cmdString += "/src";
 		fs::create_directory(cmdString.c_str());
-		cmdString+="/includes";
+		cmdString += "/includes";
 		fs::create_directory(cmdString.c_str());
 		auto pos = cmdString.find("/");
 		cmdString.replace(pos + 1, cmdString.length() - pos, "res");
@@ -772,7 +777,8 @@ void App::debug()
 	system(("gdb ./build/" + projectName).c_str());
 };
 
-void App::release() {
+void App::release()
+{
 	readauraFile(projectName);
 	compile("-DCMAKE_BUILD_TYPE=Release");
 };
