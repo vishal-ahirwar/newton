@@ -116,5 +116,6 @@ constexpr std::string_view CONAN_URL_32BIT{"https://github.com/conan-io/conan/re
 #else
 constexpr std::string_view UPDATER_URL{"https://github.com/vishal-ahirwar/aura/releases/latest/download/utool"
 };
+constexpr std::string_view CONAN_LINUX_URL{"https://github.com/conan-io/conan/releases/download/2.11.0/conan-2.11.0-linux-x86_64.tgz"};
 #endif
 #endif
