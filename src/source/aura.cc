@@ -22,8 +22,8 @@
 #define USERNAME "USER"
 #endif
 
-#include<vector>
-#include<algorithm>
+#include <vector>
+#include <algorithm>
 
 void App::setupUnitTestingFramework()
 {
@@ -81,7 +81,7 @@ void App::createNewProject(const char *argv[], int argc)
 // TODO : add compile option
 void App::compile(const std::string &additional_cmake_arg)
 {
-	//Temp Soln
+	// Temp Soln
 
 	namespace fs = std::filesystem;
 	std::string cpu_threads{std::to_string(std::thread::hardware_concurrency())};
@@ -91,7 +91,7 @@ void App::compile(const std::string &additional_cmake_arg)
 		// run cmake
 		printf("%sCompile Process has been started ....\n%s", BLUE, WHITE);
 		reloadPackages();
-				// run ninja
+		// run ninja
 		if (!system(("ninja -C build/Release -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 		else
@@ -174,9 +174,9 @@ void App::addToPathWin()
 		if (dir.is_directory())
 		{
 			path += dir.path().string();
-			if(path.find("conan")!=std::string::npos)
+			if (path.find("conan") != std::string::npos)
 			{
-				path+=";";
+				path += ";";
 				continue;
 			}
 			path += "\\bin;";
@@ -247,6 +247,15 @@ void App::addToPathUnix()
 		}
 	}
 	std::string path{aura + ";"};
+	for (const auto &dir : fs::directory_iterator(aura))
+	{
+		if (dir.is_directory())
+		{
+			if(path.find("_internal")!=std::string::npos)continue;
+			path += dir.path().string();
+			path+=";";
+		};
+	};
 	std::string env{getenv("PATH")};
 	// Split path by semicolons and check each path individually
 	std::istringstream pathStream(path);
@@ -255,6 +264,7 @@ void App::addToPathUnix()
 	std::string newPath{};
 	while (std::getline(pathStream, singlePath, ';'))
 	{
+		std::cout<<singlePath<<"\n";
 		if (env.find(singlePath) == std::string::npos)
 		{
 			found = false;
@@ -319,7 +329,7 @@ void App::installEssentialTools(bool &isInstallationComplete)
 	{
 		Downloader::download(std::string(COMPILER_URL_64BIT), home + "\\compiler.zip");
 		Downloader::download(std::string(CMAKE_URL_64BIT), home + "\\cmake.zip");
-		Downloader::download(std::string(CONAN_URL_64BIT),home+"\\conan.zip");
+		Downloader::download(std::string(CONAN_URL_64BIT), home + "\\conan.zip");
 	}
 	else
 	{
@@ -346,6 +356,13 @@ void App::installEssentialTools(bool &isInstallationComplete)
 	// Todo :read the file and u will know what ditro user running ;)
 	try
 	{
+		namespace fs = std::filesystem;
+		std::string aura{"/home/"};
+		aura += {getenv(USERNAME)};
+		aura += "/aura";
+		Downloader::download("https://github.com/conan-io/conan/releases/download/2.11.0/conan-2.11.0-linux-x86_64.tgz",aura+"/conan.tgz");
+		system(("tar -xvf "+aura+"/conan.tgz"+" -C "+aura).c_str());
+		system(("chmod +x "+aura+"/bin/conan").c_str());
 		addToPathUnix();
 		std::ifstream file(DISTRO_INFO);
 		if (!file.is_open())
@@ -373,15 +390,15 @@ void App::installEssentialTools(bool &isInstallationComplete)
 		std::cout << GREEN << "Development OS Distro/Parent Distro : " << distro_name << WHITE << "\n";
 		if (distro_name.find("debian") != std::string::npos || distro_name.find("ubuntu") != std::string::npos)
 		{
-			system("sudo apt install g++ cmake git conan");
+			system("sudo apt install g++ cmake git");
 		}
 		else if (distro_name.find("arch") != std::string::npos)
 		{
-			system("pacman -Sy g++ cmake git conan");
+			system("pacman -Sy g++ cmake git");
 		}
 		else if (distro_name.find("fedora") != std::string::npos || distro_name.find("rhel") != std::string::npos)
 		{
-			system("sudo dnf install g++ cmake git conan");
+			system("sudo dnf install g++ cmake git");
 		};
 
 		file.close();
@@ -444,7 +461,7 @@ void App::createDir(const char *argv)
 {
 	namespace fs = std::filesystem;
 	std::string cmdString{};
-	projectName=argv;
+	projectName = argv;
 	cmdString += argv;
 	if (fs::create_directory(cmdString.c_str()))
 	{
@@ -494,7 +511,7 @@ void App::generateCmakeFile(const char *argv)
 		add_executable(${PROJECT_NAME} ${SOURCE})*/
 		file << "add_executable(${PROJECT_NAME} ${SOURCE})\n";
 		file << "install(TARGETS ${PROJECT_NAME} DESTINATION bin)\n";
-		file<<"#@link\n";
+		file << "#@link\n";
 		file.close();
 	};
 }
@@ -526,9 +543,10 @@ void App::generateLicenceFile()
 	out << LICENSE_TEXT;
 	out.close();
 }
-void App::generateConanFile() {
+void App::generateConanFile()
+{
 	std::ofstream file;
-	file.open("./"+projectName+"/conanfile.txt", std::ios::out);
+	file.open("./" + projectName + "/conanfile.txt", std::ios::out);
 	if (file.is_open())
 	{
 		file << CONAN_CODE;
@@ -804,79 +822,85 @@ void App::release()
 	readauraFile(projectName);
 	compile("-DCMAKE_BUILD_TYPE=Release");
 }
-void addToConanFile(const std::string&name)
+void addToConanFile(const std::string &name)
 {
 	std::ifstream in("conanfile.txt");
-	if(!in.is_open())
+	if (!in.is_open())
 	{
-		printf("%s[error]Failed to open conanfile.txt%s\n",RED,WHITE);
+		printf("%s[error]Failed to open conanfile.txt%s\n", RED, WHITE);
 		return;
 	};
-	std::vector<std::string>lines{};
+	std::vector<std::string> lines{};
 	std::string line{};
-	while(std::getline(in,line))
+	while (std::getline(in, line))
 	{
 		lines.push_back(line);
 	};
 	in.close();
-	lines.insert(lines.begin()+1,name);
+	lines.insert(lines.begin() + 1, name);
 	std::ofstream out("conanfile.txt");
-	if(!out.is_open())return;
-	for(const auto &l:lines)
+	if (!out.is_open())
+		return;
+	for (const auto &l : lines)
 	{
-		out<<l<<"\n";
+		out << l << "\n";
 	};
 	out.close();
 }
 
-
 void addToCMakeFile(std::string name)
 {
-	auto index=name.find("/");
-	name=name.substr(0,index);
-	std::transform(name.begin(),name.end(),name.begin(),::toupper);
+	auto index = name.find("/");
+	name = name.substr(0, index);
+	std::transform(name.begin(), name.end(), name.begin(), ::toupper);
 	std::ifstream in("CMakeLists.txt");
-	if(!in.is_open())
+	if (!in.is_open())
 	{
-		printf("%s[error]Failed to open CMakeLists.txt%s\n",RED,WHITE);
+		printf("%s[error]Failed to open CMakeLists.txt%s\n", RED, WHITE);
 		return;
 	};
-	std::vector<std::string>lines{};
+	std::vector<std::string> lines{};
 	std::string line{};
-	while(std::getline(in,line))
+	while (std::getline(in, line))
 	{
 		lines.push_back(line);
 	};
 	in.close();
-	auto pos = lines.size()-1;
-	for(int i=0;i<lines.size();++i)
+	auto pos = lines.size() - 1;
+	for (int i = 0; i < lines.size(); ++i)
 	{
-		if(lines[i].find("#@find")!=std::string::npos)
+		if (lines[i].find("#@find") != std::string::npos)
 		{
-			pos=++i;
+			pos = ++i;
 			break;
 		};
 	};
-	lines.insert(lines.begin()+pos,"find_package("+name+" REQUIRED)");
-	lines.push_back("target_link_libraries(${PROJECT_NAME} PRIVATE "+name+"::"+name+")");
+	lines.insert(lines.begin() + pos, "find_package(" + name + " REQUIRED)");
+	lines.push_back("target_link_libraries(${PROJECT_NAME} PRIVATE " + name + "::" + name + ")");
 	std::ofstream out("CMakeLists.txt");
-	if(!out.is_open())return;
-	for(const auto &l:lines)
+	if (!out.is_open())
+		return;
+	for (const auto &l : lines)
 	{
-		out<<l<<"\n";
+		out << l << "\n";
 	};
 	out.close();
 };
 
-void App::add(const std::string &name) {
+void App::add(const std::string &name)
+{
 	addToConanFile(name);
-	if(system("conan install . --build=missing"))return;
-	printf("%s[Msg] : %s added to conanfile.txt and installed successfully%s\n",GREEN,name.c_str(),WHITE);
+	if (system("conan install . --build=missing"))
+		return;
+	printf("%s[Msg] : %s added to conanfile.txt and installed successfully%s\n", GREEN, name.c_str(), WHITE);
 	addToCMakeFile(name);
 	reloadPackages();
 };
 
-void App::reloadPackages() {
-	if(system("conan install . --build=missing"))return;
-	if(system("cmake --preset conan-release -G \"Ninja\""))return;
+void App::reloadPackages()
+{
+	if (system("conan install . --build=missing"))
+		return;
+	if (system("cmake --preset conan-release -G \"Ninja\""))
+		return;
 };
