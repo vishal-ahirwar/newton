@@ -28,6 +28,8 @@ namespace CLI
             "utest : to enable unit testing{aura create test --test}\n"
             "createinstaller : to create packged build of your application\n"
             "update : update the aura to latest version\n"
+            "add : to add external library to your project using conan package manager ex. aura add fmt/11.0.2\n"
+            "reload : to reload the package list ex.aura reload\n"
             "debug : to start GDB debugger\n"
             "release: to compile application in release mode or you can do this manually aura compile -DCMAKE_BUILD_TYPE=Release\n"
             "fix : to fix the aura installation\n%s",
@@ -99,6 +101,19 @@ namespace CLI
             app.debug();
         }else if (std::string(argv[1]) == std::string("release")) {
             app.release();
+        }
+        else if(std::string(argv[1]) == std::string("add"))
+        {
+            if(argCount < 3)
+            {
+                printf("%s[Error] Invalid Command !%s\n", RED, WHITE);
+                printf("Try again with 'aura help' :(\n");
+                return 0;
+            };
+            app.add(argv[2]);
+        }else if(std::string(argv[1]) == std::string("reload"))
+        {
+            app.reloadPackages();
         }
         else
         {

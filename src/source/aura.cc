@@ -22,6 +22,9 @@
 #define USERNAME "USER"
 #endif
 
+#include<vector>
+#include<algorithm>
+
 void App::setupUnitTestingFramework()
 {
 	namespace fs = std::filesystem;
@@ -62,7 +65,7 @@ void App::createNewProject(const char *argv[], int argc)
 	std::string cmdString{};
 	createDir(argv[2]);
 	printf("%sGenerating Code for main.c and CMakeLists.txt ....\n%s", GREEN, WHITE);
-
+	generateConanFile();
 	generateCppTemplateFile(argv[2]);
 	generateCmakeFile(argv[2]);
 	generateauraFile(projectName);
@@ -78,6 +81,8 @@ void App::createNewProject(const char *argv[], int argc)
 // TODO : add compile option
 void App::compile(const std::string &additional_cmake_arg)
 {
+	//Temp Soln
+
 	namespace fs = std::filesystem;
 	std::string cpu_threads{std::to_string(std::thread::hardware_concurrency())};
 	printf("%sThreads in use: %s%s\n", YELLOW, cpu_threads.c_str(), WHITE);
@@ -85,24 +90,17 @@ void App::compile(const std::string &additional_cmake_arg)
 	{
 		// run cmake
 		printf("%sCompile Process has been started ....\n%s", BLUE, WHITE);
-		std::string command{"cmake -S . -B build -G \"Ninja\" "};
-		command += additional_cmake_arg;
-		if (!system(command.c_str()))
-		{
-			if (!system(("ninja -C build -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
-				printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
-			else
-				printf("\n%sBUILD FAILED%s\n", RED, WHITE);
-		}
+		reloadPackages();
+				// run ninja
+		if (!system(("ninja -C build/Release -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
+			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 		else
-		{
-			printf("%s\n[error] Make Sure You are in Your Project's Directory!\n%s", RED, WHITE);
-		};
+			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
 	}
 	else
 	{
 		// run ninja
-		if (!system(("ninja -C build -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
+		if (!system(("ninja -C build/Release -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 		else
 			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
@@ -118,11 +116,11 @@ void App::run()
 	std::string run{};
 	// printf("%s%s: \n%s", YELLOW, projectName.c_str(),WHITE);
 #ifdef WIN32
-	run += ".\\build\\";
+	run += ".\\build\\Release\\";
 	run += projectName;
 	run += ".exe";
 #else
-	run += "./build/";
+	run += "./build/Release/";
 	run += projectName;
 #endif // WIN32
 
@@ -176,6 +174,11 @@ void App::addToPathWin()
 		if (dir.is_directory())
 		{
 			path += dir.path().string();
+			if(path.find("conan")!=std::string::npos)
+			{
+				path+=";";
+				continue;
+			}
 			path += "\\bin;";
 		}
 	};
@@ -285,7 +288,7 @@ void App::addToPathUnix()
 	};
 };
 
-void App::installCompilerAndCMake(bool &isInstallationComplete)
+void App::installEssentialTools(bool &isInstallationComplete)
 {
 #ifdef WIN32
 	namespace fs = std::filesystem;
@@ -302,7 +305,7 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	if (!home.c_str())
 		return;
 	home += "\\aura";
-	printf("%sinstalling C/C++ GCC Toolchain with cmake and ninja please wait....%s\n", BLUE, WHITE);
+	printf("%sinstalling C/C++ GCC Toolchain with cmake ninja and conan package manager please wait....%s\n", BLUE, WHITE);
 	// TODO
 	printf("%sInstall winlibs Intel/AMD (0).32-bit and (1).64-bit standalone build 0/1?%s\n", BLUE, WHITE);
 	std::cin >> input;
@@ -310,11 +313,13 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 	{
 		Downloader::download(std::string(COMPILER_URL_32BIT), home + "\\compiler.zip");
 		Downloader::download(std::string(CMAKE_URL_32BIT), home + "\\cmake.zip");
+		Downloader::download(std::string(CONAN_URL_32BIT), home + "\\conan.zip");
 	}
 	else if (input == "1")
 	{
 		Downloader::download(std::string(COMPILER_URL_64BIT), home + "\\compiler.zip");
 		Downloader::download(std::string(CMAKE_URL_64BIT), home + "\\cmake.zip");
+		Downloader::download(std::string(CONAN_URL_64BIT),home+"\\conan.zip");
 	}
 	else
 	{
@@ -327,9 +332,12 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 		return;
 	if (system((std::string("tar -xf ") + "\"" + home + "\\cmake.zip\"" + " -C " + "\"" + home + "\"").c_str()))
 		return;
+	if (system((std::string("tar -xf ") + "\"" + home + "\\conan.zip\"" + " -C " + "\"" + home + "\"").c_str()))
+		return;
 	printf("%sremoving downloaded archives...%s\n", RED, WHITE);
 	fs::remove((home + "\\compiler.zip"));
 	fs::remove((home + "\\cmake.zip"));
+	fs::remove((home + "\\conan.zip"));
 
 	isInstallationComplete = true;
 	addToPathWin();
@@ -365,15 +373,15 @@ void App::installCompilerAndCMake(bool &isInstallationComplete)
 		std::cout << GREEN << "Development OS Distro/Parent Distro : " << distro_name << WHITE << "\n";
 		if (distro_name.find("debian") != std::string::npos || distro_name.find("ubuntu") != std::string::npos)
 		{
-			system("sudo apt install g++ cmake git");
+			system("sudo apt install g++ cmake git conan");
 		}
 		else if (distro_name.find("arch") != std::string::npos)
 		{
-			system("pacman -Sy g++ cmake git");
+			system("pacman -Sy g++ cmake git conan");
 		}
 		else if (distro_name.find("fedora") != std::string::npos || distro_name.find("rhel") != std::string::npos)
 		{
-			system("sudo dnf install g++ cmake git");
+			system("sudo dnf install g++ cmake git conan");
 		};
 
 		file.close();
@@ -436,6 +444,7 @@ void App::createDir(const char *argv)
 {
 	namespace fs = std::filesystem;
 	std::string cmdString{};
+	projectName=argv;
 	cmdString += argv;
 	if (fs::create_directory(cmdString.c_str()))
 	{
@@ -477,15 +486,15 @@ void App::generateCmakeFile(const char *argv)
 	file.open("./" + projectName + "/CMakeLists.txt", std::ios::out);
 	if (file.is_open())
 	{
-		file << CMAKE_CODE << "\n";
 		file << "project(" << argv << ")\n";
+		file << CMAKE_CODE << "\n";
 		file << "set(SOURCE ./src/main.cc)#add your additional source file here!\n";
 		/*
 		set(SOURCE ./src/main.cc ./src/player.cc ./src/person.cc)
 		add_executable(${PROJECT_NAME} ${SOURCE})*/
 		file << "add_executable(${PROJECT_NAME} ${SOURCE})\n";
 		file << "install(TARGETS ${PROJECT_NAME} DESTINATION bin)\n";
-
+		file<<"#@link\n";
 		file.close();
 	};
 }
@@ -516,6 +525,19 @@ void App::generateLicenceFile()
 	};
 	out << LICENSE_TEXT;
 	out.close();
+}
+void App::generateConanFile() {
+	std::ofstream file;
+	file.open("./"+projectName+"/conanfile.txt", std::ios::out);
+	if (file.is_open())
+	{
+		file << CONAN_CODE;
+		file.close();
+	}
+	else
+	{
+		printf("%s[error]Failed to generate conanfile.txt%s\n", RED, WHITE);
+	};
 };
 
 void App::createInstaller()
@@ -584,7 +606,7 @@ bool App::onSetup()
 		file.open((home + "\\aura\\.cconfig").c_str(), std::ios::out);
 		if (file.is_open())
 		{
-			installCompilerAndCMake(isInstallationComplete);
+			installEssentialTools(isInstallationComplete);
 			file << isInstallationComplete;
 			file.close();
 			return true;
@@ -592,7 +614,7 @@ bool App::onSetup()
 	}
 	if (!isInstallationComplete)
 	{
-		installCompilerAndCMake(isInstallationComplete);
+		installEssentialTools(isInstallationComplete);
 		file.open((home + "\\aura\\.cconfig").c_str(), std::ios::out);
 		if (file.is_open())
 		{
@@ -626,7 +648,7 @@ bool App::onSetup()
 		std::cout << "config file doesn't exist, creating one\n";
 	};
 
-	installCompilerAndCMake(isInstallationComplete);
+	installEssentialTools(isInstallationComplete);
 
 	file.open((home + std::string("/aura/.cconfig")).c_str(), std::ios::out);
 	if (file.is_open())
@@ -781,4 +803,80 @@ void App::release()
 {
 	readauraFile(projectName);
 	compile("-DCMAKE_BUILD_TYPE=Release");
+}
+void addToConanFile(const std::string&name)
+{
+	std::ifstream in("conanfile.txt");
+	if(!in.is_open())
+	{
+		printf("%s[error]Failed to open conanfile.txt%s\n",RED,WHITE);
+		return;
+	};
+	std::vector<std::string>lines{};
+	std::string line{};
+	while(std::getline(in,line))
+	{
+		lines.push_back(line);
+	};
+	in.close();
+	lines.insert(lines.begin()+1,name);
+	std::ofstream out("conanfile.txt");
+	if(!out.is_open())return;
+	for(const auto &l:lines)
+	{
+		out<<l<<"\n";
+	};
+	out.close();
+}
+
+
+void addToCMakeFile(std::string name)
+{
+	auto index=name.find("/");
+	name=name.substr(0,index);
+	std::transform(name.begin(),name.end(),name.begin(),::toupper);
+	std::ifstream in("CMakeLists.txt");
+	if(!in.is_open())
+	{
+		printf("%s[error]Failed to open CMakeLists.txt%s\n",RED,WHITE);
+		return;
+	};
+	std::vector<std::string>lines{};
+	std::string line{};
+	while(std::getline(in,line))
+	{
+		lines.push_back(line);
+	};
+	in.close();
+	auto pos = lines.size()-1;
+	for(int i=0;i<lines.size();++i)
+	{
+		if(lines[i].find("#@find")!=std::string::npos)
+		{
+			pos=++i;
+			break;
+		};
+	};
+	lines.insert(lines.begin()+pos,"find_package("+name+" REQUIRED)");
+	lines.push_back("target_link_libraries(${PROJECT_NAME} PRIVATE "+name+"::"+name+")");
+	std::ofstream out("CMakeLists.txt");
+	if(!out.is_open())return;
+	for(const auto &l:lines)
+	{
+		out<<l<<"\n";
+	};
+	out.close();
+};
+
+void App::add(const std::string &name) {
+	addToConanFile(name);
+	if(system("conan install . --build=missing"))return;
+	printf("%s[Msg] : %s added to conanfile.txt and installed successfully%s\n",GREEN,name.c_str(),WHITE);
+	addToCMakeFile(name);
+	reloadPackages();
+};
+
+void App::reloadPackages() {
+	if(system("conan install . --build=missing"))return;
+	if(system("cmake --preset conan-release -G \"Ninja\""))return;
 };

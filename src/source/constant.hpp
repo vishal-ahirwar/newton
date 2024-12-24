@@ -49,10 +49,12 @@ constexpr std::string_view CMAKE_CODE{
 #Copyright 2023 Vishal Ahirwar. #replace with your copyright notice.
 cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
-include_directories(./src/includes))"};
+include_directories(./src/includes)
+#@find)"};
 
 std::string MAIN_CODE{
     R"(
@@ -92,6 +94,14 @@ TEST_CASE("Factorials are computed", "[factorial]")
     REQUIRE(Factorial(2) == 2);
     REQUIRE(Factorial(5) == 120);
 })"};
+constexpr std::string_view CONAN_CODE{R"([requires]
+
+[generators]
+CMakeDeps
+CMakeToolchain
+[layout]
+cmake_layout
+)"};
 #ifdef WIN32
 constexpr std::string_view COMPILER_URL_64BIT{"https://github.com/brechtsanders/winlibs_mingw/releases/download/14.2.0posix-19.1.1-12.0.0-msvcrt-r2/winlibs-x86_64-posix-seh-gcc-14.2.0-mingw-w64msvcrt-12.0.0-r2.7z"};
 constexpr std::string_view COMPILER_URL_32BIT{"https://github.com/brechtsanders/winlibs_mingw/releases/download/14.2.0posix-19.1.1-12.0.0-msvcrt-r2/winlibs-i686-posix-dwarf-gcc-14.2.0-mingw-w64msvcrt-12.0.0-r2.7z"};
@@ -103,7 +113,6 @@ constexpr std::string_view UPDATER_URL{"https://github.com/vishal-ahirwar/aura/r
 
 constexpr std::string_view CONAN_URL_64BIT{"https://github.com/conan-io/conan/releases/download/2.11.0/conan-2.11.0-windows-x86_64.zip"};
 constexpr std::string_view CONAN_URL_32BIT{"https://github.com/conan-io/conan/releases/download/2.11.0/conan-2.11.0-windows-i686.zip"};
-
 #else
 constexpr std::string_view UPDATER_URL{"https://github.com/vishal-ahirwar/aura/releases/latest/download/utool"
 };

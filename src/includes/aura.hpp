@@ -19,6 +19,8 @@ public:
       void update();
       void debug();
       void release();
+      void add(const std::string&);
+      void reloadPackages();
 private:
       void generateauraFile(const std::string &);
       void readauraFile(std::string &);
@@ -28,9 +30,10 @@ private:
       void generateGitIgnoreFile();
       void setupUnitTestingFramework();
       void generateLicenceFile();
+      void generateConanFile();
 private:
     bool onSetup();
-    void installCompilerAndCMake(bool&);
+    void installEssentialTools(bool&);
     void addToPathUnix();
     void addToPathWin();
     friend void test();
