@@ -51,7 +51,7 @@ Ensure the following tools are installed on your system:
 - **CMake**: [Download CMake](https://cmake.org/download/)
 - **G++** (Linux) or **MinGW** (Windows): 
   - Linux: Install via package manager (`sudo apt install build-essential`).
-  - Windows: [Download MinGW](https://sourceforge.net/projects/mingw/).
+  - Windows: [Download MinGW](https://github.com/brechtsanders/winlibs_mingw/releases/).
 
 ### Steps
 
