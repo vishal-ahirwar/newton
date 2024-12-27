@@ -1,26 +1,116 @@
-![Build Status](https://github.com/vishal-ahirwar/aura/actions/workflows/cmake-multi-platform.yml/badge.svg?event=push)
+---
 
-# C/C++ CLI Open Source Project
+# Aura
+[![Build Status](https://github.com/vishal-ahirwar/aura/actions/workflows/cmake-multi-platform.yml/badge.svg?event=push)]()
+[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# How to build aura & install on your system
-### Download zip or clone aura github repo
+**Aura** is a powerful tool for C/C++ learners, designed to streamline the process of setting up and managing projects. With Aura, you can focus on learning and coding instead of dealing with repetitive tasks like creating folders, writing CMake files, or compiling manually.
+
+---
+
+## About
+
+Learning C/C++ and tired of manually managing files, folders, and compilation? Aura automates these tasks by:
+
+- **Automated Project Initialization**: Generate a professional-grade project structure complete with a `CMakeLists.txt` file.  
+- **Organized Folder Setup**: Start every project with a clean, intuitive folder hierarchy.  
+- **Default `.gitignore` Integration**: Avoid unnecessary clutter by including a pre-configured `.gitignore` file.  
+- **Seamless Library Management**: Leverage built-in Conan support to easily integrate external libraries into your project.  
+- **Quick Environment Setup**: Configure your entire C++ learning environment effortlessly with a single command.  
+- **Efficiency-Driven Commands**: Simplify repetitive tasks to focus more on learning and building your C++ skills.  
+
+No more starting from scratch every time you want to learn a new concept in C/C++! 😊
+
+---
+
+## Features
+
+- **Automated Project Setup**: Quickly generate a new C/C++ project structure.
+- **Compilation Commands**: Simplified commands for compiling and running code.
+- **Integrated Unit Testing**: Easily set up and run unit tests.
+- **External Library Support**: Add libraries using Conan package manager.
+- **Build Automation**: A single command to compile and run your project.
+- **Cross-Platform Support**: Works on Windows and Linux.
+- **Package Management**: Manage dependencies with ease.
+- **GDB Debugger Integration**: Debug your projects seamlessly.
+- **Installer Creation**: Generate packaged builds for distribution.
+- **Update & Fix Commands**: Keep Aura up-to-date and resolve installation issues.
+
+---
+
+Download the pre-build binaries for your platform 
+or
+## Installation
+
+### Prerequisites
+
+Ensure the following tools are installed on your system:
+
+- **Git**: [Download Git](https://git-scm.com/downloads)
+- **CMake**: [Download CMake](https://cmake.org/download/)
+- **G++** (Linux) or **MinGW** (Windows): 
+  - Linux: Install via package manager (`sudo apt install build-essential`).
+  - Windows: [Download MinGW](https://sourceforge.net/projects/mingw/).
+
+### Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/vishal-ahirwar/aura.git
+   cd aura
+   ```
+
+2. Build and install:
+   - **Linux**:
+     ```bash
+     ./build.sh
+     sudo make install
+     ```
+   - **Windows**:
+     ```batch
+     build.bat
+     ```
+
+---
+
+## Usage
+
+Run Aura with the following syntax:
+```bash
+aura [command] projectname
 ```
-git clone https://github.com/vishal-ahirwar/aura
-cd aura
-bash.sh
-sudo make install
-```
-and execute build bash script this will download cmake , g++ compiler and build the project;
-or if you are on windows System make sure to download mingw and cmake both are completely free to use
-minGW : https://sourceforge.net/projects/mingw/
-CMake : https://cmake.org/
 
-Just run aura once  it will prompt you all the available commands
-Thank You for All of the project contributers and Users
-![{4B68D51D-FDA4-4A4A-80DA-B5DE2361065D}](https://github.com/user-attachments/assets/6da0d111-d032-4303-8a51-7492b52f28d5)
+### Available Commands
 
-<img width=1604 src="https://github.com/vishal-ahirwar/aura/assets/73791462/b640d23e-b505-4a78-b886-025c1f7c89c2"/><img width=1604 src="https://github.com/vishal-ahirwar/aura/assets/73791462/da27be9d-d6bd-414d-97e5-1cf9d770cfde"/><img width=1604 src="https://github.com/vishal-ahirwar/aura/assets/73791462/d454f5a7-9f67-455f-bdec-41afdbae6bbd"/>
+| Command         | Description                                                                                         |
+|------------------|-----------------------------------------------------------------------------------------------------|
+| **create**       | Create a new C/C++ project. Example: `aura create myProject`                                       |
+| **compile**      | Compile the project. Example: `cd myProject && aura compile -DCMAKE_BUILD_TYPE=Debug`              |
+| **run**          | Run the compiled binary. Ensure the project is compiled first.                                    |
+| **build**        | Compile and run the project in a single step.                                                     |
+| **setup**        | Install `g++` and `cmake` on your system (if not already installed).                              |
+| **utest**        | Enable unit testing. Example: `aura create test --test`                                           |
+| **createinstaller** | Create a packaged build of your application.                                                   |
+| **update**       | Update Aura to the latest version.                                                                |
+| **add**          | Add an external library using Conan. Example: `aura add fmt/11.0.2`                               |
+| **reload**       | Reload the package list. Example: `aura reload`.                                                 |
+| **initconan**    | Add a Conan configuration file to the project.                                                   |
+| **debug**        | Start the GDB debugger for your project.                                                          |
+| **release**      | Compile the application in release mode. Example: `aura compile -DCMAKE_BUILD_TYPE=Release`.      |
+| **fix**          | Fix Aura installation issues.                                                                     |
 
-```
-Copyright©2022 Vishal Ahirwar and Contributors. all rights reserved.
-```
+---
+
+## Author
+
+Developed by **Vishal Ahirwar**.  
+Copyright © 2024 Vishal Ahirwar and all Contributors. All rights reserved.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
+
+---
