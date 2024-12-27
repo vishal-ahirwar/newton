@@ -365,7 +365,7 @@ void App::installEssentialTools(bool &isInstallationComplete)
 		std::string aura{"/home/"};
 		aura += {getenv(USERNAME)};
 		aura += "/aura";
-		Downloader::download("https://github.com/conan-io/conan/releases/download/2.11.0/conan-2.11.0-linux-x86_64.tgz",aura+"/conan.tgz");
+		Downloader::download(std::string(CONAN_LINUX_URL),aura+"/conan.tgz");
 		system(("tar -xvf "+aura+"/conan.tgz"+" -C "+aura).c_str());
 		system(("chmod +x "+aura+"/bin/conan").c_str());
 		addToPathUnix();
