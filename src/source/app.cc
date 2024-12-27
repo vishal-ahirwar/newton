@@ -63,7 +63,7 @@ namespace CLI
         }
         else if (std::string(argv[1]) == std::string("run"))
         {
-            app.run();
+            app.run(argc-2,argv+2);
         }
         else if (std::string(argv[1]) == std::string("build"))
         {

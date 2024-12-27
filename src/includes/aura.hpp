@@ -10,7 +10,7 @@ private:
 public:
       void createNewProject(const char *argv[],int);
       void compile(const std::string&additional_cmake_arg="");
-      void run();
+      void run(int,const char**);
       void build();
       void setup();
       void createInstaller();

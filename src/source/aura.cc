@@ -107,7 +107,7 @@ void App::compile(const std::string &additional_cmake_arg)
 	}
 };
 
-void App::run()
+void App::run(int argc,const char**argv)
 {
 	std::string output{};
 	readauraFile(output);
@@ -123,6 +123,11 @@ void App::run()
 	run += "./build/Release/";
 	run += projectName;
 #endif // WIN32
+	for(int i=0;i<argc;++i)
+	{
+		run+=" ";
+		run+=argv[i];
+	};
 
 	if (system(run.c_str()))
 	{
@@ -136,7 +141,7 @@ void App::run()
 void App::build()
 {
 	this->compile();
-	this->run();
+	this->run(0,nullptr);
 }
 
 void App::addToPathWin()
@@ -876,7 +881,7 @@ void addToCMakeFile(std::string name)
 		};
 	};
 	lines.insert(lines.begin() + pos, "find_package(" + name + " REQUIRED)");
-	lines.push_back("target_link_libraries(${PROJECT_NAME} PRIVATE " + name + "::" + name + ")");
+	lines.push_back("target_link_libraries(${PROJECT_NAME} " + name + "::" + name + ")");
 	std::ofstream out("CMakeLists.txt");
 	if (!out.is_open())
 		return;
