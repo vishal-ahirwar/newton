@@ -832,7 +832,7 @@ void addToConanFile(const std::string &name)
 	std::ifstream in("conanfile.txt");
 	if (!in.is_open())
 	{
-		printf("%s[error]Failed to open conanfile.txt%s\n", RED, WHITE);
+		fprintf(stderr,"%s[error]Failed to open conanfile.txt, try aura initconan%s\n", RED, WHITE);
 		return;
 	};
 	std::vector<std::string> lines{};
@@ -857,7 +857,7 @@ void addToCMakeFile(std::string name)
 {
 	auto index = name.find("/");
 	name = name.substr(0, index);
-	std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 	std::ifstream in("CMakeLists.txt");
 	if (!in.is_open())
 	{
@@ -908,4 +908,14 @@ void App::reloadPackages()
 		return;
 	if (system("cmake --preset conan-release -G \"Ninja\""))
 		return;
+}
+void App::initConan() {
+	std::ifstream conan_file{"conanfile.txt"};
+	if(conan_file.is_open())
+	{
+		fprintf(stderr,"%sconanfile.txt already exist!%s\n",RED,WHITE);
+		return;
+	};
+	generateConanFile();
+	reloadPackages();
 };

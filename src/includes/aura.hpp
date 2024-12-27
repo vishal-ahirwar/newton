@@ -21,6 +21,7 @@ public:
       void release();
       void add(const std::string&);
       void reloadPackages();
+      void initConan();
 private:
       void generateauraFile(const std::string &);
       void readauraFile(std::string &);
