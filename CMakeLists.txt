@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.6...3.31)
 project(aura VERSION 2.3.0)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -10,6 +10,7 @@ if(WIN32)
 endif(WIN32)
 set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -funroll-loops")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(COMPANY "Vishal ahirwar")
 string(TIMESTAMP CURRENT_YEAR "%Y")
 set(COPYRIGHT "Copyright(c) ${CURRENT_YEAR} Vishal Ahirwar and all Contributors. All rights reserved.")

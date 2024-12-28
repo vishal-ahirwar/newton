@@ -47,14 +47,21 @@ constexpr std::string_view CMAKE_CODE{
     R"(
 #Auto Genrated CMake file by aura CLI
 #Copyright 2023 Vishal Ahirwar. #replace with your copyright notice.
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.6...3.31)
+project(@ VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
 include_directories(./src/includes)
-#@find)"};
+#@find
+set(SOURCE ./src/main.cc)#add your additional source file here!
+add_executable(${PROJECT_NAME} ${SOURCE})
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+#@link
+)"};
+
 
 std::string MAIN_CODE{
     R"(
@@ -102,6 +109,30 @@ CMakeToolchain
 [layout]
 cmake_layout
 )"};
+
+constexpr std::string_view VSCODE_CONFIG{R"(   {
+       "configurations": [
+           {
+               "name": "Win32",
+               "compileCommands": "${workspaceFolder}/build/Release/compile_commands.json",
+               "includePath": [
+                   "${workspaceFolder}/**"
+               ],
+               "defines": [
+                   "_DEBUG",
+                   "UNICODE",
+                   "_UNICODE"
+               ],
+               "windowsSdkVersion": "10.0.22621.0",
+               "cStandard": "c17",
+               "cppStandard": "c++17",
+               "intelliSenseMode": "windows-gcc-x64"
+           }
+       ],
+       "version": 4
+   })"};
+constexpr std::string_view VIM_CONFIG{R"()"};
+
 #ifdef WIN32
 constexpr std::string_view COMPILER_URL_64BIT{"https://github.com/brechtsanders/winlibs_mingw/releases/download/14.2.0posix-19.1.1-12.0.0-msvcrt-r2/winlibs-x86_64-posix-seh-gcc-14.2.0-mingw-w64msvcrt-12.0.0-r2.7z"};
 constexpr std::string_view COMPILER_URL_32BIT{"https://github.com/brechtsanders/winlibs_mingw/releases/download/14.2.0posix-19.1.1-12.0.0-msvcrt-r2/winlibs-i686-posix-dwarf-gcc-14.2.0-mingw-w64msvcrt-12.0.0-r2.7z"};

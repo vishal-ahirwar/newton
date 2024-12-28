@@ -107,7 +107,7 @@ void App::compile(const std::string &additional_cmake_arg)
 	}
 };
 
-void App::run(int argc,const char**argv)
+void App::run(int argc, const char **argv)
 {
 	std::string output{};
 	readauraFile(output);
@@ -123,10 +123,10 @@ void App::run(int argc,const char**argv)
 	run += "./build/Release/";
 	run += projectName;
 #endif // WIN32
-	for(int i=0;i<argc;++i)
+	for (int i = 0; i < argc; ++i)
 	{
-		run+=" ";
-		run+=argv[i];
+		run += " ";
+		run += argv[i];
 	};
 
 	if (system(run.c_str()))
@@ -141,7 +141,7 @@ void App::run(int argc,const char**argv)
 void App::build()
 {
 	this->compile();
-	this->run(0,nullptr);
+	this->run(0, nullptr);
 }
 
 void App::addToPathWin()
@@ -256,9 +256,10 @@ void App::addToPathUnix()
 	{
 		if (dir.is_directory())
 		{
-			if(path.find("_internal")!=std::string::npos)continue;
+			if (path.find("_internal") != std::string::npos)
+				continue;
 			path += dir.path().string();
-			path+=";";
+			path += ";";
 		};
 	};
 	std::string env{getenv("PATH")};
@@ -269,7 +270,7 @@ void App::addToPathUnix()
 	std::string newPath{};
 	while (std::getline(pathStream, singlePath, ';'))
 	{
-		std::cout<<singlePath<<"\n";
+		std::cout << singlePath << "\n";
 		if (env.find(singlePath) == std::string::npos)
 		{
 			found = false;
@@ -365,9 +366,9 @@ void App::installEssentialTools(bool &isInstallationComplete)
 		std::string aura{"/home/"};
 		aura += {getenv(USERNAME)};
 		aura += "/aura";
-		Downloader::download(std::string(CONAN_LINUX_URL),aura+"/conan.tgz");
-		system(("tar -xvf "+aura+"/conan.tgz"+" -C "+aura).c_str());
-		system(("chmod +x "+aura+"/bin/conan").c_str());
+		Downloader::download(std::string(CONAN_LINUX_URL), aura + "/conan.tgz");
+		system(("tar -xvf " + aura + "/conan.tgz" + " -C " + aura).c_str());
+		system(("chmod +x " + aura + "/bin/conan").c_str());
 		addToPathUnix();
 		std::ifstream file(DISTRO_INFO);
 		if (!file.is_open())
@@ -508,15 +509,13 @@ void App::generateCmakeFile(const char *argv)
 	file.open("./" + projectName + "/CMakeLists.txt", std::ios::out);
 	if (file.is_open())
 	{
-		file << "project(" << argv << ")\n";
-		file << CMAKE_CODE << "\n";
-		file << "set(SOURCE ./src/main.cc)#add your additional source file here!\n";
-		/*
-		set(SOURCE ./src/main.cc ./src/player.cc ./src/person.cc)
-		add_executable(${PROJECT_NAME} ${SOURCE})*/
-		file << "add_executable(${PROJECT_NAME} ${SOURCE})\n";
-		file << "install(TARGETS ${PROJECT_NAME} DESTINATION bin)\n";
-		file << "#@link\n";
+		std::string str(CMAKE_CODE);
+		auto index = str.find("@");
+		if (index != std::string::npos)
+		{
+			str.replace(index, 1, projectName);
+		};
+		file << str;
 		file.close();
 	};
 }
@@ -589,9 +588,9 @@ void App::test()
 	setupUnitTestingFramework();
 	compile();
 #ifdef WIN32
-	system(".\\build\\tests.exe");
+	system(".\\build\\Release\\tests.exe");
 #else
-	system("./build/tests");
+	system("./build/Release/tests");
 #endif
 };
 
@@ -832,7 +831,7 @@ void addToConanFile(const std::string &name)
 	std::ifstream in("conanfile.txt");
 	if (!in.is_open())
 	{
-		fprintf(stderr,"%s[error]Failed to open conanfile.txt, try aura initconan%s\n", RED, WHITE);
+		fprintf(stderr, "%s[error]Failed to open conanfile.txt, try aura initconan%s\n", RED, WHITE);
 		return;
 	};
 	std::vector<std::string> lines{};
@@ -909,13 +908,30 @@ void App::reloadPackages()
 	if (system("cmake --preset conan-release -G \"Ninja\""))
 		return;
 }
-void App::initConan() {
+void App::initConan()
+{
 	std::ifstream conan_file{"conanfile.txt"};
-	if(conan_file.is_open())
+	if (conan_file.is_open())
 	{
-		fprintf(stderr,"%sconanfile.txt already exist!%s\n",RED,WHITE);
+		fprintf(stderr, "%sconanfile.txt already exist!%s\n", RED, WHITE);
 		return;
 	};
 	generateConanFile();
 	reloadPackages();
+}
+void App::vscode()
+{
+	namespace fs = std::filesystem;
+	if(!fs::exists("setting.nn"))return;
+	fs::exists(".vscode") ? fprintf(stdout, "%s.vscode already exist!%s\n", YELLOW, WHITE) : fs::create_directory(".vscode");
+	std::ofstream file(".vscode/c_cpp_properties.json", std::ios::out);
+	if (file.is_open())
+	{
+		file << VSCODE_CONFIG;
+	}
+	else
+	{
+		fprintf(stderr, "%sfailed to create .vscode/c_cpp_properties.json%s\n", RED, WHITE);
+	}
+	file.close();
 };

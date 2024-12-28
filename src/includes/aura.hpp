@@ -22,6 +22,8 @@ public:
       void add(const std::string&);
       void reloadPackages();
       void initConan();
+      void vscode();
+      
 private:
       void generateauraFile(const std::string &);
       void readauraFile(std::string &);

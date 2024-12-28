@@ -33,6 +33,7 @@ namespace CLI
             "initconan : to add conan file\n"
             "debug : to start GDB debugger\n"
             "release: to compile application in release mode or you can do this manually aura compile -DCMAKE_BUILD_TYPE=Release\n"
+            "vscode : to geenrate vscode c/c++ configuration file\n"
             "fix : to fix the aura installation\n%s",
             BLUE, YELLOW, aura_VERSION_MAJOR, aura_VERSION_MINOR, aura_VERSION_PATCH,
             aura_COMPANY, aura_COPYRIGHT, CYAN, GREEN, WHITE);
@@ -122,6 +123,9 @@ namespace CLI
         else if (std::string(argv[1]) == std::string("initconan"))
         {
             app.initConan();
+        }else if(std::string(argv[1])==std::string("vscode"))
+        {
+            app.vscode();
         }
         else
         {
