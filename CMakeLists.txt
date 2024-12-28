@@ -16,7 +16,10 @@ string(TIMESTAMP CURRENT_YEAR "%Y")
 set(COPYRIGHT "Copyright(c) ${CURRENT_YEAR} Vishal Ahirwar and all Contributors. All rights reserved.")
 
 configure_file(auraConfig.h.in auraConfig.h)
-find_package(cpr)
+include(FetchContent)
+FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
+                         GIT_TAG dec9422db3af470641f8b0d90e4b451c4daebf64) # Replace with your desired git commit from: https://github.com/libcpr/cpr/releases
+FetchContent_MakeAvailable(cpr)
 find_package(Catch2)
 add_executable(${PROJECT_NAME} 
     src/main.cc

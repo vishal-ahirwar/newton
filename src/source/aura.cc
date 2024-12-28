@@ -24,7 +24,8 @@
 
 #include <vector>
 #include <algorithm>
-
+void addToConanFile(const std::string&);
+void addToCMakeFile( std::string);
 void App::setupUnitTestingFramework()
 {
 	namespace fs = std::filesystem;
@@ -41,20 +42,10 @@ void App::setupUnitTestingFramework()
 		testFile << TEST_CXX_CODE;
 		testFile.close();
 	};
-
-	std::ofstream file;
-	file.open("CMakeLists.txt", std::ios::app);
-	if (file.is_open())
-	{
-		file << TEST_CODE;
-		file.close();
-		printf("%s[Msg] : catch2 added for unit testing,start adding tests in tests/main.cc then run 'aura utest' to run tests:)%s\n", GREEN, WHITE);
-	}
-	else
-	{
-		printf("%s[error] : Failed to setup unit testing framework catch2 :(%s\n", RED, WHITE);
-	}
-}
+	addToConanFile("catch2/3.7.1");
+	addToCMakeFile("catch2/3.7.1");
+	fprintf(stdout, "%sunit testing template code added to project run tests with : aura utest%s\n", YELLOW, WHITE);
+};
 
 void App::createNewProject(const char *argv[], int argc)
 {
@@ -308,40 +299,22 @@ void App::installEssentialTools(bool &isInstallationComplete)
 {
 #ifdef WIN32
 	namespace fs = std::filesystem;
-	printf("%sThis will install C/C++ GCC Toolchain with cmake and ninja from Github,\nAre you sure you "
+	printf("%sThis will install C/C++ GCC Toolchain with cmake, ninja and conan package manager from Github,\nAre you sure you "
 		   "want to "
 		   "continue??[y/n] %s\n",
 		   YELLOW,
 		   WHITE);
-	std::string input{};
-	std::cin >> input;
-	if (tolower(input[0]) != 'y')
-		return;
+	char input{};
+	fscanf(stdin,"%c",&input);
+	if(tolower(input)!='y')exit(0);
 	std::string home = getenv(USERNAME);
 	if (!home.c_str())
 		return;
 	home += "\\aura";
-	printf("%sinstalling C/C++ GCC Toolchain with cmake ninja and conan package manager please wait....%s\n", BLUE, WHITE);
-	// TODO
-	printf("%sInstall winlibs Intel/AMD (0).32-bit and (1).64-bit standalone build 0/1?%s\n", BLUE, WHITE);
-	std::cin >> input;
-	if (input == "0")
-	{
-		Downloader::download(std::string(COMPILER_URL_32BIT), home + "\\compiler.zip");
-		Downloader::download(std::string(CMAKE_URL_32BIT), home + "\\cmake.zip");
-		Downloader::download(std::string(CONAN_URL_32BIT), home + "\\conan.zip");
-	}
-	else if (input == "1")
-	{
-		Downloader::download(std::string(COMPILER_URL_64BIT), home + "\\compiler.zip");
-		Downloader::download(std::string(CMAKE_URL_64BIT), home + "\\cmake.zip");
-		Downloader::download(std::string(CONAN_URL_64BIT), home + "\\conan.zip");
-	}
-	else
-	{
-		printf("Invalid install command, try again\n");
-		return;
-	}
+	Downloader::download(std::string(COMPILER_URL_64BIT), home + "\\compiler.zip");
+	Downloader::download(std::string(CMAKE_URL_64BIT), home + "\\cmake.zip");
+	Downloader::download(std::string(CONAN_URL_64BIT), home + "\\conan.zip");
+	Downloader::download(std::string(NINJA_URL_64BIT), home + "\\ninja.zip");
 
 	printf("%sunzipping file at %s%s\n", BLUE, home.c_str(), WHITE);
 	if (system((std::string("tar -xf ") + "\"" + home + "\\compiler.zip\"" + " -C " + "\"" + home + "\"").c_str()))
@@ -350,11 +323,13 @@ void App::installEssentialTools(bool &isInstallationComplete)
 		return;
 	if (system((std::string("tar -xf ") + "\"" + home + "\\conan.zip\"" + " -C " + "\"" + home + "\"").c_str()))
 		return;
+	if (system((std::string("tar -xf ") + "\"" + home + "\\ninja.zip\"" + " -C " + "\"" + home + "\"").c_str()))
+		return;
 	printf("%sremoving downloaded archives...%s\n", RED, WHITE);
 	fs::remove((home + "\\compiler.zip"));
 	fs::remove((home + "\\cmake.zip"));
 	fs::remove((home + "\\conan.zip"));
-
+	fs::remove((home + "\\ninja.zip"));
 	isInstallationComplete = true;
 	addToPathWin();
 #else
@@ -922,7 +897,8 @@ void App::initConan()
 void App::vscode()
 {
 	namespace fs = std::filesystem;
-	if(!fs::exists("setting.nn"))return;
+	if (!fs::exists("setting.nn"))
+		return;
 	fs::exists(".vscode") ? fprintf(stdout, "%s.vscode already exist!%s\n", YELLOW, WHITE) : fs::create_directory(".vscode");
 	std::ofstream file(".vscode/c_cpp_properties.json", std::ios::out);
 	if (file.is_open())
