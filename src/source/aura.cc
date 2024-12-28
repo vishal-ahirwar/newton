@@ -24,8 +24,8 @@
 
 #include <vector>
 #include <algorithm>
-void addToConanFile(const std::string&);
-void addToCMakeFile( std::string);
+void addToConanFile(const std::string &);
+void addToCMakeFile(std::string);
 void App::setupUnitTestingFramework()
 {
 	namespace fs = std::filesystem;
@@ -43,7 +43,21 @@ void App::setupUnitTestingFramework()
 		testFile.close();
 	};
 	addToConanFile("catch2/3.7.1");
-	addToCMakeFile("catch2/3.7.1");
+	std::ofstream file{"./CMakeLists.txt", std::ios::app};
+	if (file.is_open())
+	{
+		file << "#Unit Testing CMake Section\n";
+		file << "find_package(Catch2)\n";
+		file << "add_executable(tests ./tests/main.cc)\n";
+		file << "target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)\n";
+	}
+	else
+	{
+		fprintf(stderr, "%sFailed to open CMakeLists.txt%s", RED, WHITE);
+		return;
+	};
+	file.close();
+	reloadPackages();
 	fprintf(stdout, "%sunit testing template code added to project run tests with : aura utest%s\n", YELLOW, WHITE);
 };
 
@@ -305,8 +319,9 @@ void App::installEssentialTools(bool &isInstallationComplete)
 		   YELLOW,
 		   WHITE);
 	char input{};
-	fscanf(stdin,"%c",&input);
-	if(tolower(input)!='y')exit(0);
+	fscanf(stdin, "%c", &input);
+	if (tolower(input) != 'y')
+		exit(0);
 	std::string home = getenv(USERNAME);
 	if (!home.c_str())
 		return;
