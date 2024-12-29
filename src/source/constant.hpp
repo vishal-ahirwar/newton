@@ -133,6 +133,8 @@ constexpr std::string_view CONAN_URL_64BIT{"https://github.com/conan-io/conan/re
 
 constexpr std::string_view NINJA_URL_64BIT{"https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip"};
 
+constexpr std::string_view NSIS_URL{};//TODO
+
 #else
 constexpr std::string_view UPDATER_URL{"https://github.com/vishal-ahirwar/aura/releases/latest/download/utool"
 };

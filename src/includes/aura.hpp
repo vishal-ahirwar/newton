@@ -9,7 +9,7 @@ private:
 
 public:
       void createNewProject(const char *argv[],int);
-      void compile(const std::string&additional_cmake_arg="");
+      bool compile(const std::string&additional_cmake_arg="");
       void run(int,const char**);
       void build();
       void setup();
@@ -23,7 +23,7 @@ public:
       void reloadPackages();
       void initConan();
       void vscode();
-      
+      void rebuild();
 private:
       void generateauraFile(const std::string &);
       void readauraFile(std::string &);

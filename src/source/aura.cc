@@ -26,6 +26,7 @@
 #include <algorithm>
 void addToConanFile(const std::string &);
 void addToCMakeFile(std::string);
+
 void App::setupUnitTestingFramework()
 {
 	namespace fs = std::filesystem;
@@ -63,6 +64,7 @@ void App::setupUnitTestingFramework()
 
 void App::createNewProject(const char *argv[], int argc)
 {
+	//TODO
 	clock_t start = clock(), end = 0;
 
 	printf("%sCreating directory ....\n%s", GREEN, WHITE);
@@ -84,7 +86,7 @@ void App::createNewProject(const char *argv[], int argc)
 };
 
 // TODO : add compile option
-void App::compile(const std::string &additional_cmake_arg)
+bool App::compile(const std::string &additional_cmake_arg)
 {
 	// Temp Soln
 
@@ -98,20 +100,32 @@ void App::compile(const std::string &additional_cmake_arg)
 		reloadPackages();
 		// run ninja
 		if (!system(("ninja -C build/Release -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
+		{
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
+			return true;
+		}
 		else
+		{
 			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
+			return false;
+		}
 	}
 	else
 	{
 		// run ninja
 		if (!system(("ninja -C build/Release -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
+		{
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
+			return true;
+		}
 		else
+		{
 			printf("\n%sBUILD FAILED%s\n", RED, WHITE);
+			return false;
+		}
 	}
 };
-
+//
 void App::run(int argc, const char **argv)
 {
 	std::string output{};
@@ -143,12 +157,14 @@ void App::run(int argc, const char **argv)
 	};
 }
 
+//
 void App::build()
 {
 	this->compile();
 	this->run(0, nullptr);
 }
 
+//
 void App::addToPathWin()
 {
 #ifdef WIN32
@@ -227,7 +243,7 @@ void App::addToPathWin()
 	}
 #endif
 }
-
+//
 void App::addToPathUnix()
 {
 	namespace fs = std::filesystem;
@@ -309,6 +325,7 @@ void App::addToPathUnix()
 	};
 };
 
+//installing dev tools 
 void App::installEssentialTools(bool &isInstallationComplete)
 {
 #ifdef WIN32
@@ -408,12 +425,13 @@ void App::installEssentialTools(bool &isInstallationComplete)
 
 #endif
 };
-
+//
 void App::setup()
 {
 	onSetup();
 };
 
+//TODO
 void App::generateauraFile(const std::string &path)
 {
 	std::string newFileName{path};
@@ -436,6 +454,8 @@ void App::generateauraFile(const std::string &path)
 	}
 }
 
+//TODO
+//reading project configuration file 
 void App::readauraFile(std::string &output)
 {
 	std::ifstream file("setting.nn");
@@ -453,6 +473,7 @@ void App::readauraFile(std::string &output)
 	};
 }
 
+//creating folder structure for project
 void App::createDir(const char *argv)
 {
 	namespace fs = std::filesystem;
@@ -475,7 +496,7 @@ void App::createDir(const char *argv)
 		exit(0);
 	}
 };
-
+//
 void App::generateCppTemplateFile(const char *argv)
 {
 	std::ofstream file;
@@ -492,7 +513,7 @@ void App::generateCppTemplateFile(const char *argv)
 		file.close();
 	};
 }
-
+//
 void App::generateCmakeFile(const char *argv)
 {
 	std::ofstream file;
@@ -509,7 +530,7 @@ void App::generateCmakeFile(const char *argv)
 		file.close();
 	};
 }
-
+//
 void App::generateGitIgnoreFile()
 {
 	std::ofstream file;
@@ -521,7 +542,7 @@ void App::generateGitIgnoreFile()
 		file.close();
 	};
 };
-
+//
 void App::generateLicenceFile()
 {
 	std::ofstream out;
@@ -537,6 +558,7 @@ void App::generateLicenceFile()
 	out << LICENSE_TEXT;
 	out.close();
 }
+//
 void App::generateConanFile()
 {
 	std::ofstream file;
@@ -551,9 +573,17 @@ void App::generateConanFile()
 		printf("%s[error]Failed to generate conanfile.txt%s\n", RED, WHITE);
 	};
 };
-
+//creating packaged build [with installer for windows] using cpack
 void App::createInstaller()
 {
+	if (!compile())
+	{
+		fprintf(stderr, "%s[Error] : Please First fix all the errors%s", RED, WHITE);
+		return;
+	};
+
+	if (!system("cd build/Release && cpack"))
+		return;
 	std::ofstream file;
 	file.open("CMakeLists.txt", std::ios::app);
 	if (file.is_open())
@@ -561,7 +591,8 @@ void App::createInstaller()
 		file << CPACK_CODE;
 		file.close();
 		generateLicenceFile();
-		if (system("cd build && cpack"))
+		reloadPackages();
+		if (system("cd build/Release && cpack"))
 			printf("%s[Msg]CPack added to cmake run 'cpack' command from build directory to build "
 				   "a installer :)%s\n",
 				   GREEN,
@@ -573,6 +604,7 @@ void App::createInstaller()
 	}
 };
 
+//running utest
 void App::test()
 {
 	setupUnitTestingFramework();
@@ -584,6 +616,8 @@ void App::test()
 #endif
 };
 
+//TODO
+//implementation is buggy right now will fix later
 bool App::onSetup()
 {
 	bool isInstallationComplete{false};
@@ -682,7 +716,8 @@ bool App::onSetup()
 
 #endif
 }
-
+//TODO
+//remove the ~/aura and reinstall the aura again with all the tools like cmake,g++ compiler,ninja,nsis
 void App::fixInstallation()
 {
 	printf("%sAre you sure you "
@@ -711,6 +746,7 @@ void App::fixInstallation()
 	setup();
 };
 
+//cross-platform : creating processs to start the update
 void createProcess(const std::string &path)
 {
 #ifdef WIN32
@@ -775,7 +811,7 @@ void createProcess(const std::string &path)
 	}
 #endif
 }
-
+//download the utool from github if it's not already there then download the latest build from github
 void App::update()
 {
 	namespace fs = std::filesystem;
@@ -794,42 +830,46 @@ void App::update()
 #endif
 	printf("updating aura...\n");
 	std::cout << source << "\n";
-	if (fs::exists(source))
+	if (fs::exists(source))//if utool is present in ~/aura directory then start the utool if not download the utool first
 	{
-		createProcess(source);
+		createProcess(source);//Windows//starting process parent-less which will start utool so aura will shutdown and then utool override the aura.exe
 	}
 	else
 	{
 		Downloader::download(std::string(UPDATER_URL), source);
-#ifndef WIN32
+#ifndef WIN32//for linux we have to set permission for the newly downloaded file
 		system(("chmod +x " + source).c_str());
 #endif
-		createProcess(source);
+		createProcess(source);//starting process parent-less which will start utool so aura will shutdown and then utool override the aura.exe
 	};
-}
+};
+//TODO
 void App::debug()
 {
 	readauraFile(projectName);
 	compile("-DCMAKE_BUILD_TYPE=Debug");
 	system(("gdb ./build/" + projectName).c_str());
 };
-
+//TODO
+//this is actually useless for now but will add usefull stuff to it in future
 void App::release()
 {
 	readauraFile(projectName);
 	compile("-DCMAKE_BUILD_TYPE=Release");
-}
+};
+
+//writing to conanfile.txt without checking if the package is already in conanfile.txt, for that checks are in add() method
 void addToConanFile(const std::string &name)
 {
 	std::ifstream in("conanfile.txt");
-	if (!in.is_open())
+	if (!in.is_open())//checking if conanfile.txt presents or not
 	{
 		fprintf(stderr, "%s[error]Failed to open conanfile.txt, try aura initconan%s\n", RED, WHITE);
 		return;
 	};
 	std::vector<std::string> lines{};
 	std::string line{};
-	while (std::getline(in, line))
+	while (std::getline(in, line))//reading whole conanfile.txt line by line in vector so we can easily update the conanfile.txt at a particular line
 	{
 		lines.push_back(line);
 	};
@@ -838,7 +878,7 @@ void addToConanFile(const std::string &name)
 	std::ofstream out("conanfile.txt");
 	if (!out.is_open())
 		return;
-	for (const auto &l : lines)
+	for (const auto &l : lines)//writing back to file the updated contents
 	{
 		out << l << "\n";
 	};
@@ -848,8 +888,9 @@ void addToConanFile(const std::string &name)
 void addToCMakeFile(std::string name)
 {
 	auto index = name.find("/");
-	name = name.substr(0, index);
-	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+	name = name.substr(0, index);//extracting package name from conan format string like fmt/1.2.0 there the package name is fmt
+
+	std::transform(name.begin(), name.end(), name.begin(), ::tolower);//this may not work for all packages downloaded from conan 
 	std::ifstream in("CMakeLists.txt");
 	if (!in.is_open())
 	{
@@ -858,7 +899,7 @@ void addToCMakeFile(std::string name)
 	};
 	std::vector<std::string> lines{};
 	std::string line{};
-	while (std::getline(in, line))
+	while (std::getline(in, line))//reading whole file in vector to easily update the file
 	{
 		lines.push_back(line);
 	};
@@ -868,32 +909,60 @@ void addToCMakeFile(std::string name)
 	{
 		if (lines[i].find("#@find") != std::string::npos)
 		{
-			pos = ++i;
+			pos = ++i;//add the find_package(name) after this line
 			break;
 		};
 	};
-	lines.insert(lines.begin() + pos, "find_package(" + name + " REQUIRED)");
-	lines.push_back("target_link_libraries(${PROJECT_NAME} " + name + "::" + name + ")");
+	lines.insert(lines.begin() + pos, "find_package(" + name + " REQUIRED)");//NOTE
+	for (int i = 0; i < lines.size(); ++i)
+	{
+		if (lines[i].find("@link") != std::string::npos)
+		{
+			pos = ++i;//add the target_link_libraries(${PROJECT_NAME} after this line
+			break;
+		}
+	};
+	lines.insert(lines.begin() + pos, "target_link_libraries(${PROJECT_NAME} " + name + "::" + name + ")");//NOTE
 	std::ofstream out("CMakeLists.txt");
 	if (!out.is_open())
 		return;
-	for (const auto &l : lines)
+	for (const auto &l : lines)//writing back to file the updated contents
 	{
 		out << l << "\n";
 	};
 	out.close();
 };
-
+//adding new packages to conanfile.txt then add recuired commands to  cmakelists.txt and reload cmakelist.txt to reconfigure project
 void App::add(const std::string &name)
 {
-	addToConanFile(name);
-	if (system("conan install . --build=missing"))
+	std::ifstream file{"conanfile.txt"};
+	if (!file.is_open())
+	{
+		fprintf(stderr, "%s[Error] : failed to open conanfile.txt%s", RED, WHITE);
 		return;
+	};
+	std::string line{};
+	while (std::getline(file, line))
+	{
+		if (line.find(name) != std::string::npos)//if name is already in conanfile.txt don't add it again ;)
+		{
+			fprintf(stderr, "%s%s is already in conanfile.txt%s", YELLOW, name.c_str(), WHITE);
+			return;
+		}
+	};
+	file.close();
+	addToConanFile(name);//add to conanfile then install if install fails don't add it to cmakelists.txt
+	if (system("conan install . --build=missing"))
+	{
+		fprintf(stderr, "%s[Error] : Failed to install %s package\n%s", RED, name.c_str(), WHITE);
+		return;
+	}
 	printf("%s[Msg] : %s added to conanfile.txt and installed successfully%s\n", GREEN, name.c_str(), WHITE);
 	addToCMakeFile(name);
 	reloadPackages();
 };
 
+//installing newly added packages or reloading CMake configuration 
 void App::reloadPackages()
 {
 	if (system("conan install . --build=missing"))
@@ -901,17 +970,23 @@ void App::reloadPackages()
 	if (system("cmake --preset conan-release -G \"Ninja\""))
 		return;
 }
+
+//for generating conan file for any CMAKE project
 void App::initConan()
 {
 	std::ifstream conan_file{"conanfile.txt"};
 	if (conan_file.is_open())
 	{
-		fprintf(stderr, "%sconanfile.txt already exist!%s\n", RED, WHITE);
+		fprintf(stderr, "%sconanfile.txt already exist! you should try aura reload%s\n", RED, WHITE);
+		conan_file.close();
 		return;
 	};
 	generateConanFile();
 	reloadPackages();
 }
+
+//for generating vscode intelligence 
+//everytime user run this command it's will override everything in c_cpp_properties.json
 void App::vscode()
 {
 	namespace fs = std::filesystem;
@@ -928,4 +1003,16 @@ void App::vscode()
 		fprintf(stderr, "%sfailed to create .vscode/c_cpp_properties.json%s\n", RED, WHITE);
 	}
 	file.close();
+}
+
+//it will simply delete the whole build folder and compile the project again
+void App::rebuild()
+{
+	namespace fs = std::filesystem;
+	if(!fs::remove("./build"))
+	{
+		fprintf(stderr,"%s[Error] : Failed to remove build directory!\n%s",RED,WHITE);
+		return;
+	};
+	compile();
 };

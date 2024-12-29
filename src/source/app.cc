@@ -30,6 +30,7 @@ namespace CLI
             "update : update the aura to latest version\n"
             "add : to add external library to your project using conan package manager ex. aura add fmt/11.0.2\n"
             "reload : to reload the package list ex.aura reload\n"
+            "rebuild : this will remove the build directory and compile the project again\n"
             "initconan : to add conan file\n"
             "debug : to start GDB debugger\n"
             "release: to compile application in release mode or you can do this manually aura compile -DCMAKE_BUILD_TYPE=Release\n"
@@ -126,6 +127,9 @@ namespace CLI
         }else if(std::string(argv[1])==std::string("vscode"))
         {
             app.vscode();
+        }else if(std::string(argv[1])==std::string("rebuild"))
+        {
+            app.rebuild();
         }
         else
         {
