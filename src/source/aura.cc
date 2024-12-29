@@ -487,7 +487,7 @@ void App::generateCppTemplateFile(const char *argv)
 	{
 		auto pos = MAIN_CODE.find("@");
 		std::string str{std::string("Hello, ") + projectName + std::string("\\nhappy coding journey :)\\n")};
-		MAIN_CODE.insert(pos + 1, str);
+		MAIN_CODE.replace(pos, 1, str);
 		file << MAIN_CODE;
 		file.close();
 	};
@@ -632,8 +632,11 @@ bool App::onSetup()
 		{
 			file << isInstallationComplete;
 			file.close();
-		}
-	}
+			return true;
+		};
+		return false;
+	};
+	return true;
 #else
 	if (!fs::create_directory(home + "/aura"))
 	{
