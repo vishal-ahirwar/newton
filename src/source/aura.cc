@@ -851,9 +851,9 @@ void App::debug()
 		return;
 	if (system("cmake --preset conan-debug -G \"Ninja\""))
 		return;
-	if (system("ninja -C ./build/Release"))
+	if (system("ninja -C ./build/Debug"))
 		return;
-	system(("gdb ./build/Release/" + projectName).c_str());
+	system(("gdb ./build/Debug/" + projectName).c_str());
 };
 // TODO
 // this is actually useless for now but will add usefull stuff to it in future
