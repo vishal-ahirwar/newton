@@ -99,7 +99,7 @@ bool App::compile(const std::string &additional_cmake_arg)
 		printf("%sCompile Process has been started ....\n%s", BLUE, WHITE);
 		reloadPackages();
 		// run ninja
-		if (!system(("ninja -C build/Release -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
+		if (!system(("ninja -C build/Debug -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
 		{
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 			return true;
@@ -113,7 +113,7 @@ bool App::compile(const std::string &additional_cmake_arg)
 	else
 	{
 		// run ninja
-		if (!system(("ninja -C build/Release -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
+		if (!system(("ninja -C build/Debug -j" + cpu_threads).c_str())) // if there is any kind of error then don't clear the terminal
 		{
 			printf("\n%sBUILD SUCCESSFULL%s\n", GREEN, WHITE);
 			return true;
@@ -135,11 +135,11 @@ void App::run(int argc, const char **argv)
 	std::string run{};
 	// printf("%s%s: \n%s", YELLOW, projectName.c_str(),WHITE);
 #ifdef WIN32
-	run += ".\\build\\Release\\";
+	run += ".\\build\\Debug\\";
 	run += projectName;
 	run += ".exe";
 #else
-	run += "./build/Release/";
+	run += "./build/Debug/";
 	run += projectName;
 #endif // WIN32
 	for (int i = 0; i < argc; ++i)
@@ -847,12 +847,6 @@ void App::update()
 void App::debug()
 {
 	readauraFile(projectName);
-	if (system("conan install . --build=missing --settings=build_type=Debug"))
-		return;
-	if (system("cmake --preset conan-debug -G \"Ninja\""))
-		return;
-	if (system("ninja -C ./build/Debug"))
-		return;
 	system(("gdb ./build/Debug/" + projectName).c_str());
 };
 // TODO
@@ -961,7 +955,7 @@ void App::add(const std::string &name)
 	};
 	file.close();
 	addToConanFile(name); // add to conanfile then install if install fails don't add it to cmakelists.txt
-	if (system("conan install . --build=missing"))
+	if (system("conan install . --build=missing --settings=build_type=Debug"))
 	{
 		fprintf(stderr, "%s[Error] : Failed to install %s package\n%s", RED, name.c_str(), WHITE);
 		return;
@@ -974,9 +968,9 @@ void App::add(const std::string &name)
 // installing newly added packages or reloading CMake configuration
 void App::reloadPackages()
 {
-	if (system("conan install . --build=missing"))
+	if (system("conan install . --build=missing --settings=build_type=Debug"))
 		return;
-	if (system("cmake --preset conan-release -G \"Ninja\""))
+	if (system("cmake --preset conan-debug -G \"Ninja\""))
 		return;
 }
 
