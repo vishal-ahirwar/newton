@@ -847,15 +847,24 @@ void App::update()
 void App::debug()
 {
 	readauraFile(projectName);
-	compile("-DCMAKE_BUILD_TYPE=Debug");
+	if (system("conan install . --build=missing --settings=build_type=Debug"))
+		return;
+	if (system("cmake --preset conan-debug -G \"Ninja\""))
+		return;
+	if (system("ninja -C ./build/Release"))
+		return;
 	system(("gdb ./build/Release/" + projectName).c_str());
 };
 // TODO
 // this is actually useless for now but will add usefull stuff to it in future
 void App::release()
 {
-	readauraFile(projectName);
-	compile("-DCMAKE_BUILD_TYPE=Release");
+	if (system("conan install . --build=missing --settings=build_type=Release"))
+		return;
+	if (system("cmake --preset conan-release -G \"Ninja\""))
+		return;
+	if (system("ninja -C ./build/Release"))
+		return;
 };
 
 // writing to conanfile.txt without checking if the package is already in conanfile.txt, for that checks are in add() method
@@ -1009,11 +1018,11 @@ void App::vscode()
 void App::rebuild()
 {
 	namespace fs = std::filesystem;
-	if(fs::exists("./build"))
-	if (!fs::remove_all("./build"))
-	{
-		fprintf(stderr, "%s[Error] : Failed to remove build directory!\n%s", RED, WHITE);
-		return;
-	};
+	if (fs::exists("./build"))
+		if (!fs::remove_all("./build"))
+		{
+			fprintf(stderr, "%s[Error] : Failed to remove build directory!\n%s", RED, WHITE);
+			return;
+		};
 	compile();
 };
