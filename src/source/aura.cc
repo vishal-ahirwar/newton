@@ -576,12 +576,11 @@ void App::generateConanFile()
 // creating packaged build [with installer for windows] using cpack
 void App::createInstaller()
 {
-	if (!compile())
+	if (!release())
 	{
 		fprintf(stderr, "%s[Error] : Please First fix all the errors%s", RED, WHITE);
 		return;
 	};
-
 	if (!system("cd build/Release && cpack"))
 		return;
 	std::ofstream file;
@@ -851,14 +850,15 @@ void App::debug()
 };
 // TODO
 // this is actually useless for now but will add usefull stuff to it in future
-void App::release()
+bool App::release()
 {
 	if (system("conan install . --build=missing --settings=build_type=Release"))
-		return;
+		return false;
 	if (system("cmake --preset conan-release -G \"Ninja\""))
-		return;
+		return false;
 	if (system("ninja -C ./build/Release"))
-		return;
+		return false;
+	return true;
 };
 
 // writing to conanfile.txt without checking if the package is already in conanfile.txt, for that checks are in add() method

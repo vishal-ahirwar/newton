@@ -18,7 +18,7 @@ public:
       void fixInstallation();
       void update();
       void debug();
-      void release();
+      bool release();
       void add(const std::string&);
       void reloadPackages();
       void initConan();
