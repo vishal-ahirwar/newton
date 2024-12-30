@@ -609,9 +609,9 @@ void App::test()
 	setupUnitTestingFramework();
 	compile();
 #ifdef WIN32
-	system(".\\build\\Release\\tests.exe");
+	system(".\\build\\Debug\\tests.exe");
 #else
-	system("./build/Release/tests");
+	system("./build/Debug/tests");
 #endif
 };
 

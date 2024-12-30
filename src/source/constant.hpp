@@ -102,7 +102,7 @@ constexpr std::string_view VSCODE_CONFIG{R"(   {
        "configurations": [
            {
                "name": "Win32",
-               "compileCommands": "${workspaceFolder}/build/Release/compile_commands.json",
+               "compileCommands": "${workspaceFolder}/build/Debug/compile_commands.json",
                "includePath": [
                    "${workspaceFolder}/**"
                ],
