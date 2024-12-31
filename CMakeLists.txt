@@ -42,5 +42,3 @@ include(CPack)
 target_link_libraries(${PROJECT_NAME} PRIVATE cpr::cpr)
 target_link_libraries(utool PRIVATE cpr::cpr)
 
-add_executable(tests ./tests/main.cc)
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
