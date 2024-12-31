@@ -14,7 +14,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(COMPANY "Vishal ahirwar")
 string(TIMESTAMP CURRENT_YEAR "%Y")
 set(COPYRIGHT "Copyright(c) ${CURRENT_YEAR} Vishal Ahirwar and all Contributors. All rights reserved.")
-
+include_directories(./src/includes ${PROJECT_BINARY_DIR})
 configure_file(auraConfig.h.in auraConfig.h)
 include(FetchContent)
 FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
@@ -23,14 +23,11 @@ FetchContent_MakeAvailable(cpr)
 find_package(Catch2)
 add_executable(${PROJECT_NAME} 
     src/main.cc
-    src/source/app.cc
-    src/source/aura.cc
-    downloader/downloader.cc)
+    src/includes/app/app.cc
+    src/includes/aura/aura.cc
+    src/includes/downloader/downloader.cc)
 
-add_executable(utool utool/main.cc downloader/downloader.cc)
-
-target_include_directories(${PROJECT_NAME} PUBLIC src/includes downloader ${PROJECT_BINARY_DIR})
-target_include_directories(utool PUBLIC src/includes downloader ${PROJECT_BINARY_DIR})
+add_executable(utool utool/main.cc src/includes/downloader/downloader.cc)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 

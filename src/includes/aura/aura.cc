@@ -1,7 +1,7 @@
-#include "aura.hpp"
-#include "colors.hpp"
+#include<aura/aura.hpp>
+#include <constants/colors.hpp>
 #include <thread>
-#include "constant.hpp"
+#include <constants/constant.hpp>
 #include <ctime>
 #include <filesystem>
 #include <fstream>
@@ -14,7 +14,7 @@
 #ifndef WIN32
 #include <unistd.h>
 #endif
-#include <downloader.h>
+#include <downloader/downloader.h>
 
 #ifdef WIN32
 #define USERNAME "USERPROFILE"

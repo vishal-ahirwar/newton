@@ -1,12 +1,11 @@
-#include "app.h"
-#include "colors.hpp"
-#include "aura.hpp"
-#include "auraConfig.h"
-
+#include <app/app.h>
+#include <constants/colors.hpp>
+#include <aura/aura.hpp>
+#include <auraConfig.h>
 #include <string>
 #include <stdio.h>
 #include <iostream>
-extern int argCount;
+
 namespace CLI
 {
     int showHelp()
@@ -45,13 +44,13 @@ namespace CLI
         App app;
         if (std::string(argv[1]) == std::string("create"))
         {
-            if (argCount < 3)
+            if (argc < 3)
             {
                 printf("[Error]Project name can't be null!\n");
                 return 1;
             };
 
-            app.createNewProject(argv, argCount);
+            app.createNewProject(argv, argc);
         }
         else if (std::string(argv[1]) == std::string("help"))
         {
@@ -109,7 +108,7 @@ namespace CLI
         }
         else if (std::string(argv[1]) == std::string("add"))
         {
-            if (argCount < 3)
+            if (argc < 3)
             {
                 printf("%s[Error] Invalid Command !%s\n", RED, WHITE);
                 printf("Try again with 'aura help' :(\n");

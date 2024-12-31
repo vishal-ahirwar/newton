@@ -1,6 +1,6 @@
 #include <iostream>
-#include "colors.hpp"
-#include <downloader.h>
+#include <constants/colors.hpp>
+#include <downloader/downloader.h>
 #ifdef WIN32
 constexpr std::string_view UPDATE_URL{"https://github.com/vishal-ahirwar/aura/releases/latest/download/aura.exe"};
 #else
