@@ -35,8 +35,8 @@ namespace CLI
             "release: to compile application in release mode or you can do this manually aura compile -DCMAKE_BUILD_TYPE=Release\n"
             "vscode : to geenrate vscode c/c++ configuration file\n"
             "fix : to fix the aura installation\n%s",
-            BLUE, YELLOW, aura_VERSION_MAJOR, aura_VERSION_MINOR, aura_VERSION_PATCH,
-            aura_COMPANY, aura_COPYRIGHT, CYAN, GREEN, WHITE);
+            BLUE, YELLOW, AURA_VERSION_MAJOR, AURA_VERSION_MINOR, AURA_VERSION_PATCH,
+            AURA_COMPANY, AURA_COPYRIGHT, CYAN, GREEN, WHITE);
         return 0;
     }
     int createApp(const char *argv[], int argc)
